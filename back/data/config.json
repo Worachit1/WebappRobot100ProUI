@@ -110,7 +110,7 @@
           "rcsPosition": "E2"
         }
       ],
-      "c040" :[
+      "c040": [
         {
           "id": "s-t1",
           "name": "Test1",
@@ -122,6 +122,26 @@
           "rcsPosition": "Test2"
         }
       ]
+    }
+  ],
+  "sensorJobs": [
+    {
+      "input": 1,
+      "robotId": "robot-1",
+      "pickupId": "pickup-a",
+      "dropId": "drop-a"
+    },
+    {
+      "input": 2,
+      "robotId": "robot-1",
+      "pickupId": "pickup-b",
+      "dropId": "drop-b"
+    },
+    {
+      "input": 3,
+      "robotId": "robot-1",
+      "pickupId": "pickup-c",
+      "dropId": "drop-c"
     }
   ]
 }

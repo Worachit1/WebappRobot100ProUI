@@ -1,0 +1,127 @@
+{
+  "sendEnabled": true,
+  "pollingIntervalMs": 2000,
+  "statusRefreshIntervalMs": 5000,
+  "modelProcessCode": "liftMoveShelf157",
+  "fromSystem": "TSC",
+  "rcs": [
+    {
+      "id": "rcs-1",
+      "name": "RCS-1",
+      "baseUrl": "http://192.168.8.100:7000",
+      "areaIds": [
+        1
+      ]
+    }
+  ],
+  "robots": [
+    {
+      "id": "c040",
+      "name": "C040",
+      "deviceNum": "8154",
+      "rcsId": "rcs-1",
+      "imageUrl": "/assets/robot/C0401.png",
+      "modelProcessCode": {
+        "delivery": "FPTask"
+      }
+    },
+    {
+      "id": "d150d",
+      "name": "D150D",
+      "deviceNum": "8154",
+      "rcsId": "rcs-1",
+      "imageUrl": "/assets/robot/D150D1.png",
+      "modelProcessCode": {
+        "delivery": "FPTask"
+      }
+    },
+    {
+      "id": "fp150",
+      "name": "FP150",
+      "deviceNum": "FP001",
+      "rcsId": "rcs-1",
+      "imageUrl": "/assets/robot/FP1501.png",
+      "modelProcessCode": {
+        "delivery": "FPTask"
+      }
+    },
+    {
+      "id": "e10",
+      "name": "E10",
+      "deviceNum": "8154",
+      "rcsId": "rcs-1",
+      "imageUrl": "/assets/robot/E101.png",
+      "modelProcessCode": {
+        "delivery": "FPTask"
+      }
+    }
+  ],
+  "spots": [
+    {
+      "fp150": [
+        {
+          "id": "s-a1",
+          "name": "A1",
+          "rcsPosition": "A1"
+        },
+        {
+          "id": "s-a1-r",
+          "name": "A1-R",
+          "rcsPosition": "A1-R"
+        },
+        {
+          "id": "s-a2",
+          "name": "A2",
+          "rcsPosition": "A2"
+        },
+        {
+          "id": "s-a3",
+          "name": "A3",
+          "rcsPosition": "A3"
+        },
+        {
+          "id": "s-b3",
+          "name": "B3",
+          "rcsPosition": "B3"
+        },
+        {
+          "id": "s-b4",
+          "name": "B4",
+          "rcsPosition": "B4"
+        },
+        {
+          "id": "s-c1-2",
+          "name": "C1-2",
+          "rcsPosition": "C1-2"
+        },
+        {
+          "id": "s-c1-2",
+          "name": "C1-2",
+          "rcsPosition": "C1-2"
+        },
+        {
+          "id": "s-e1-2",
+          "name": "E1-2",
+          "rcsPosition": "E1-2"
+        },
+        {
+          "id": "s-e2",
+          "name": "E2",
+          "rcsPosition": "E2"
+        }
+      ],
+      "c040" :[
+        {
+          "id": "s-t1",
+          "name": "Test1",
+          "rcsPosition": "Test1"
+        },
+        {
+          "id": "s-t2",
+          "name": "Test2",
+          "rcsPosition": "Test2"
+        }
+      ]
+    }
+  ]
+}

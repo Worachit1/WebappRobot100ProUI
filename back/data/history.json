@@ -1,0 +1,170 @@
+[
+  {
+    "orderId": "1782118033889355574",
+    "robotId": "fp150",
+    "robotName": "FP150",
+    "pickup": {
+      "id": "s-b3",
+      "name": "B3",
+      "rcsPosition": "B3"
+    },
+    "drop": {
+      "id": "s-a001",
+      "name": "A001",
+      "rcsPosition": "A001"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-06-22T08:47:13.889Z",
+    "startedAt": "2026-06-22T08:47:13.890Z",
+    "rcsPayload": {
+      "modelProcessCode": "FPTask",
+      "fromSystem": "TSC",
+      "orderId": "1782118033889355574",
+      "taskOrderDetail": [
+        {
+          "taskPath": "B3,A001",
+          "deviceNum": "FP001"
+        }
+      ]
+    },
+    "finishedAt": "2026-06-22T08:47:14.158Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1782118033889355574",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1782116335235742293",
+    "robotId": "fp150",
+    "robotName": "FP150",
+    "pickup": {
+      "id": "s-2001",
+      "name": "20001",
+      "rcsPosition": "20001"
+    },
+    "drop": {
+      "id": "s-b3",
+      "name": "B3",
+      "rcsPosition": "B3"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-06-22T08:18:55.235Z",
+    "startedAt": "2026-06-22T08:18:55.237Z",
+    "rcsPayload": {
+      "modelProcessCode": "FPTask",
+      "fromSystem": "TSC",
+      "orderId": "1782116335235742293",
+      "taskOrderDetail": [
+        {
+          "taskPath": "20001,B3",
+          "deviceNum": "FP001"
+        }
+      ]
+    },
+    "finishedAt": "2026-06-22T08:18:55.375Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1782116335235742293",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1782116104063281381",
+    "robotId": "fp150",
+    "robotName": "FP150",
+    "pickup": {
+      "id": "s-2001",
+      "name": "2001",
+      "rcsPosition": "2001"
+    },
+    "drop": {
+      "id": "s-b3",
+      "name": "B3",
+      "rcsPosition": "B3"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-06-22T08:15:04.063Z",
+    "startedAt": "2026-06-22T08:15:04.065Z",
+    "rcsPayload": {
+      "modelProcessCode": "FPTask",
+      "fromSystem": "TSC",
+      "orderId": "1782116104063281381",
+      "taskOrderDetail": [
+        {
+          "taskPath": "2001,B3",
+          "deviceNum": "FP001"
+        }
+      ]
+    },
+    "finishedAt": "2026-06-22T08:15:06.222Z",
+    "rcsResponse": {
+      "code": 2009,
+      "data": "",
+      "desc": "路径点集有误"
+    },
+    "error": "路径点集有误"
+  },
+  {
+    "orderId": "1782108060667557635",
+    "robotId": "fp150",
+    "robotName": "FP150",
+    "pickup": {
+      "id": "pick01",
+      "name": "PickUp-01",
+      "rcsPosition": "PickUp-01"
+    },
+    "drop": {
+      "id": "pick02",
+      "name": "PickUp-02",
+      "rcsPosition": "PickUp-02"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-06-22T06:01:00.667Z",
+    "startedAt": "2026-06-22T06:01:00.668Z",
+    "rcsPayload": {
+      "modelProcessCode": "liftMoveShelf157",
+      "fromSystem": "TSC",
+      "orderId": "1782108060667557635",
+      "taskOrderDetail": [
+        {
+          "taskPath": "PickUp-01,PickUp-02",
+          "deviceNum": "FP0001"
+        }
+      ]
+    },
+    "finishedAt": "2026-06-22T06:01:02.725Z",
+    "error": "connect ECONNREFUSED 192.168.5.114:7000"
+  },
+  {
+    "orderId": "1781854882436854708",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "pick05",
+      "name": "PickUp-05",
+      "rcsPosition": "PickUp-05"
+    },
+    "drop": {
+      "id": "pick01",
+      "name": "PickUp-01",
+      "rcsPosition": "PickUp-01"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-06-19T07:41:22.436Z",
+    "startedAt": "2026-06-19T07:41:22.437Z",
+    "rcsPayload": {
+      "modelProcessCode": "liftMoveShelf157",
+      "fromSystem": "TSC",
+      "orderId": "1781854882436854708",
+      "taskOrderDetail": [
+        {
+          "taskPath": "PickUp-05,PickUp-01",
+          "deviceNum": "8154"
+        }
+      ]
+    },
+    "finishedAt": "2026-06-19T07:41:43.491Z",
+    "error": "connect ETIMEDOUT 10.10.213.89:7000"
+  }
+]

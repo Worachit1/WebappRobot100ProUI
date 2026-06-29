@@ -7,9 +7,12 @@ const ordersRoutes = require("./routes/orders");
 const statusRoutes = require("./routes/status");
 const robotsRoutes = require("./routes/robots");
 const locationsRoutes = require("./routes/locations");
+const ioSensor = require("./services/ioSensor");
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+ioSensor.startPolling();
 
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));

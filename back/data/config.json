@@ -127,21 +127,21 @@
   "sensorJobs": [
     {
       "input": 1,
-      "robotId": "robot-1",
-      "pickupId": "pickup-a",
-      "dropId": "drop-a"
+      "robotId": "fp150",
+      "pickupId": "A1",
+      "dropId": "B3"
     },
     {
       "input": 2,
-      "robotId": "robot-1",
-      "pickupId": "pickup-b",
-      "dropId": "drop-b"
+      "robotId": "fp150",
+      "pickupId": "A1",
+      "dropId": "B3"
     },
     {
       "input": 3,
-      "robotId": "robot-1",
-      "pickupId": "pickup-c",
-      "dropId": "drop-c"
+      "robotId": "fp150",
+      "pickupId": "A1",
+      "dropId": "B3"
     }
   ]
 }

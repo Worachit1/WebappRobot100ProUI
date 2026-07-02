@@ -22,7 +22,7 @@
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/C0401.png",
       "modelProcessCode": {
-        "delivery": "Cshelf"
+        "delivery": "liftMoveShelf21"
       }
     },
     {

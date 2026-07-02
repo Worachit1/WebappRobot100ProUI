@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import ScreenLayout from "../components/ScreenLayout.jsx";
-import { fetchSport } from "../api/client.js";
+import { fetchSport, fetchConfig, createOrder } from "../api/client.js";
 
 function PickupSelect() {
   const navigate = useNavigate();
@@ -22,6 +22,12 @@ function PickupSelect() {
 
   const [pickupPoints, setPickupPoints] = useState([]);
   const [pickupId, setPickupId] = useState("");
+
+  const [dropId, setDropId] = useState("");
+  const [robot, setRobot] = useState(null);
+  const [modelProcessType, setModelProcessType] = useState("");
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,9 +36,20 @@ function PickupSelect() {
       return;
     }
 
-    fetchSport(robotId)
-      .then((res) => {
-        setPickupPoints(res?.data || []);
+    Promise.all([fetchSport(robotId), fetchConfig()])
+      .then(([spotRes, config]) => {
+        setPickupPoints(spotRes?.data || []);
+
+        const foundRobot = (config?.robots || []).find(
+          (item) => String(item.id) === String(robotId),
+        );
+
+        setRobot(foundRobot || null);
+
+        const entries = Object.entries(foundRobot?.modelProcessCode || {});
+        if (entries.length === 1) {
+          setModelProcessType(entries[0][0]);
+        }
       })
       .finally(() => setLoading(false));
   }, [robotId]);
@@ -41,22 +58,92 @@ function PickupSelect() {
     return pickupPoints.find((item) => item.id === pickupId) || null;
   }, [pickupPoints, pickupId]);
 
-  const handleNext = () => {
-    if (!robotId || !selectedPickup) return;
+  const availableDropPoints = useMemo(() => {
+    return pickupPoints.filter((item) => String(item.id) !== String(pickupId));
+  }, [pickupPoints, pickupId]);
 
-    navigate(
-      `/drop-select?robotId=${encodeURIComponent(
-        robotId,
-      )}&robotName=${encodeURIComponent(
-        robotName,
-      )}&pickupId=${encodeURIComponent(
-        selectedPickup.id,
-      )}&pickupName=${encodeURIComponent(
-        selectedPickup.name,
-      )}&pickupRcs=${encodeURIComponent(selectedPickup.rcsPosition || "")}`,
+  const selectedDrop = useMemo(() => {
+    return (
+      availableDropPoints.find((item) => String(item.id) === String(dropId)) ||
+      null
     );
-  };
+  }, [availableDropPoints, dropId]);
 
+  const modelProcessOptions = useMemo(() => {
+    return Object.entries(robot?.modelProcessCode || {}).map(
+      ([type, code]) => ({
+        type,
+        code,
+      }),
+    );
+  }, [robot]);
+
+  const selectedModelProcess = useMemo(() => {
+    return (
+      modelProcessOptions.find((item) => item.type === modelProcessType) || null
+    );
+  }, [modelProcessOptions, modelProcessType]);
+
+  const isSingleOption = modelProcessOptions.length === 1;
+
+  const handleConfirm = async () => {
+    if (!robotId || !selectedPickup || !selectedDrop || !selectedModelProcess) {
+      return;
+    }
+
+    const confirmResult = await Swal.fire({
+      title: "Create Order ?",
+      html: `
+      <div style="text-align:left">
+        <p><b>Robot:</b> ${robotName}</p>
+        <p><b>Pick Up:</b> ${selectedPickup.name}</p>
+        <p><b>Drop Off:</b> ${selectedDrop.name}</p>
+        <p><b>Task:</b> ${selectedModelProcess.code}</p>
+      </div>
+    `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Confirm",
+      confirmButtonColor: "#2d49ae",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    });
+
+    if (!confirmResult.isConfirmed) return;
+
+    try {
+      setConfirmLoading(true);
+
+      const res = await createOrder({
+        robotId,
+        pickupId: selectedPickup.id,
+        dropId: selectedDrop.id,
+        modelProcessType: selectedModelProcess.type,
+        modelProcessCode: selectedModelProcess.code,
+      });
+
+      await Swal.fire({
+        icon: "success",
+        title: "Order Created",
+        html: `
+        <div style="text-align:left">
+          <p><b>Order ID:</b> ${res.orderId}</p>
+          <p><b>Status:</b> ${res.status}</p>
+        </div>
+      `,
+      });
+
+      navigate("/");
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "ERROR",
+        text: err?.message || "Create Order Failed",
+      });
+    } finally {
+      setConfirmLoading(false);
+    }
+  };
   return (
     <ScreenLayout
       title="เลือกจุดต้นทาง"
@@ -113,7 +200,10 @@ function PickupSelect() {
               fullWidth
               value={pickupId}
               displayEmpty
-              onChange={(e) => setPickupId(e.target.value)}
+              onChange={(e) => {
+                setPickupId(e.target.value);
+                setDropId("");
+              }}
               sx={{
                 mb: { xs: 3, md: 5 },
                 height: { xs: 56, md: 70 },
@@ -137,25 +227,124 @@ function PickupSelect() {
             </Select>
 
             {selectedPickup && (
+              <>
+                <Typography
+                  fontWeight={900}
+                  sx={{
+                    fontSize: { xs: 18, md: 20 },
+                    mb: 1.5,
+                  }}
+                >
+                  DROP OFF
+                </Typography>
+
+                <Select
+                  fullWidth
+                  value={dropId}
+                  displayEmpty
+                  onChange={(e) => setDropId(e.target.value)}
+                  sx={{
+                    mb: { xs: 3, md: 5 },
+                    height: { xs: 56, md: 70 },
+                    fontSize: { xs: 18, md: 20 },
+                    borderRadius: "4px",
+                  }}
+                >
+                  <MenuItem
+                    value=""
+                    disabled
+                    sx={{ fontSize: { xs: 18, md: 20 } }}
+                  >
+                    <em>---Drop Off Select---</em>
+                  </MenuItem>
+
+                  {availableDropPoints.map((item) => (
+                    <MenuItem
+                      key={item.id}
+                      value={item.id}
+                      sx={{ fontSize: { xs: 18, md: 20 } }}
+                    >
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            )}
+
+            {selectedDrop && (
+              <>
+                <Typography
+                  fontWeight={900}
+                  sx={{
+                    fontSize: { xs: 18, md: 20 },
+                    mb: 1.5,
+                  }}
+                >
+                  MODEL PROCESS TASK
+                </Typography>
+
+                <Select
+                  fullWidth
+                  value={modelProcessType}
+                  displayEmpty
+                  disabled={isSingleOption}
+                  onChange={(e) => setModelProcessType(e.target.value)}
+                  sx={{
+                    mb: { xs: 3, md: 5 },
+                    height: { xs: 56, md: 70 },
+                    fontSize: { xs: 18, md: 20 },
+                    borderRadius: "4px",
+                  }}
+                >
+                  <MenuItem
+                    value=""
+                    disabled
+                    sx={{ fontSize: { xs: 18, md: 20 } }}
+                  >
+                    <em>---Model Process Select---</em>
+                  </MenuItem>
+
+                  {modelProcessOptions.map((item) => (
+                    <MenuItem
+                      key={item.type}
+                      value={item.type}
+                      sx={{ fontSize: { xs: 18, md: 20 } }}
+                    >
+                      {item.code}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            )}
+
+            {selectedPickup && selectedDrop && (
               <Box sx={{ border: "1px solid #ddd", p: 1, mb: 3 }}>
                 <Typography sx={{ fontSize: { xs: 18, md: 20 } }}>
                   <b>Pick Up:</b> {selectedPickup.name}
                 </Typography>
+                <Typography sx={{ fontSize: { xs: 18, md: 20 } }}>
+                  <b>Drop OFF:</b> {selectedDrop.name}
+                </Typography>
               </Box>
             )}
-
             <Button
               fullWidth
               variant="contained"
               size="large"
-              disabled={!selectedPickup || !robotId}
-              onClick={handleNext}
+              disabled={
+                !selectedPickup ||
+                !selectedDrop ||
+                !selectedModelProcess ||
+                !robotId ||
+                confirmLoading
+              }
+              onClick={handleConfirm}
               sx={{
                 fontWeight: 900,
                 borderRadius: "4px",
               }}
             >
-              Next
+              {confirmLoading ? "Confirming..." : "Confirm"}
             </Button>
           </>
         )}

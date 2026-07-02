@@ -1,5 +1,169 @@
 [
   {
+    "orderId": "178298710395531333",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-a1",
+      "name": "A1",
+      "rcsPosition": "A1"
+    },
+    "drop": {
+      "id": "s-a2",
+      "name": "A2",
+      "rcsPosition": "A2"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-02T10:11:43.955Z",
+    "startedAt": "2026-07-02T10:11:43.957Z",
+    "rcsPayload": {
+      "modelProcessCode": "liftMoveShelf21",
+      "fromSystem": "TSC",
+      "orderId": "178298710395531333",
+      "taskOrderDetail": [
+        {
+          "taskPath": "A1,A2",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-02T10:12:04.995Z",
+    "error": "connect ETIMEDOUT 192.168.8.100:7000"
+  },
+  {
+    "orderId": "1782984145569161998",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-a1",
+      "name": "A1",
+      "rcsPosition": "A1"
+    },
+    "drop": {
+      "id": "s-a2",
+      "name": "A2",
+      "rcsPosition": "A2"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-02T09:22:25.569Z",
+    "startedAt": "2026-07-02T09:22:25.573Z",
+    "rcsPayload": {
+      "modelProcessCode": "liftMoveShelf21",
+      "fromSystem": "TSC",
+      "orderId": "1782984145569161998",
+      "taskOrderDetail": [
+        {
+          "taskPath": "A1,A2",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-02T09:22:25.910Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1782984145569161998",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1782984094823145163",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-a1",
+      "name": "A1",
+      "rcsPosition": "A1"
+    },
+    "drop": {
+      "id": "s-a2",
+      "name": "A2",
+      "rcsPosition": "A2"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-02T09:21:34.823Z",
+    "startedAt": "2026-07-02T09:21:34.827Z",
+    "rcsPayload": {
+      "modelProcessCode": "liftMoveShelf21",
+      "fromSystem": "TSC",
+      "orderId": "1782984094823145163",
+      "taskOrderDetail": [
+        {
+          "taskPath": "A1,A2",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-02T09:21:54.703Z",
+    "error": "connect ECONNABORTED 192.168.8.100:7000"
+  },
+  {
+    "orderId": "1782983971549763236",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-a1",
+      "name": "A1",
+      "rcsPosition": "A1"
+    },
+    "drop": {
+      "id": "s-a2",
+      "name": "A2",
+      "rcsPosition": "A2"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-02T09:19:31.550Z",
+    "startedAt": "2026-07-02T09:19:31.552Z",
+    "rcsPayload": {
+      "modelProcessCode": "Cshelf",
+      "fromSystem": "TSC",
+      "orderId": "1782983971549763236",
+      "taskOrderDetail": [
+        {
+          "taskPath": "A1,A2",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-02T09:19:32.092Z",
+    "rcsResponse": {
+      "code": 2009,
+      "data": "",
+      "desc": "路径点集有误"
+    },
+    "error": "路径点集有误"
+  },
+  {
+    "orderId": "1782979484283430",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-a1",
+      "name": "A1",
+      "rcsPosition": "A1"
+    },
+    "drop": {
+      "id": "s-b1",
+      "name": "B1",
+      "rcsPosition": "B1"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-02T08:04:44.283Z",
+    "startedAt": "2026-07-02T08:04:44.285Z",
+    "rcsPayload": {
+      "modelProcessCode": "Cshelf",
+      "fromSystem": "TSC",
+      "orderId": "1782979484283430",
+      "taskOrderDetail": [
+        {
+          "taskPath": "A1,B1",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-02T08:05:05.328Z",
+    "error": "connect ETIMEDOUT 192.168.8.100:7000"
+  },
+  {
     "orderId": "1782961772877458276",
     "robotId": "d150d",
     "robotName": "D150D",

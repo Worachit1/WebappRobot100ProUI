@@ -14,9 +14,9 @@ const IO_TIMEOUT_MS = 1000;
 const HOLD_MS = 5000;
 const POLL_MS = 1000;
 
-const ROBOT_ID = "d150d";
-const PICKUP_ID = "s-pallet1";
-const DROP_ID = "s-b4-1";
+const ROBOT_ID = "c040";
+const PICKUP_ID = "s-a1";
+const DROP_ID = "s-a2";
 const MODEL_PROCESS_TYPE = "delivery";
 const fs = require("fs");
 const path = require("path");
@@ -47,7 +47,7 @@ function appendSensorStatusLog(sensorId, status) {
 
 // กรณีใช้ sw เดียว ให้ใช้ sw-board ตัวเดียวใน config.json
 function getSwBoardConfig(config) {
-  return (config["Sensors"] || [])[0] || {};
+  return (config["sw-board"] || [])[0] || {};
 }
 // function getSwBoardConfig(config) {
 //   const list = config["sw-board"] || [];

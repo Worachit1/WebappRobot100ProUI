@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, useMediaQuery } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HomeIcon from "@mui/icons-material/Home";
 
@@ -14,6 +14,8 @@ function ScreenLayout({
   showLogo = true,
   showBackground = true, // เพิ่ม
 }) {
+  const isPortrait = useMediaQuery("(orientation: portrait)");
+
   return (
     <Box
       sx={{
@@ -29,21 +31,18 @@ function ScreenLayout({
         position: "relative",
         overflow: "hidden",
         ...(showBackground && {
-        "&::before": {
-          content: '""',
-          position: "fixed",
-          inset: 0,
-          backgroundImage: `url(${logo100Pro})`,
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center center",
-          opacity: 0.05,
-          backgroundSize: {
-            xs: "90%",
-            md: "35%",
+          "&::before": {
+            content: '""',
+            position: "fixed",
+            inset: 0,
+            backgroundImage: `url(${logo100Pro})`,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center center",
+            opacity: 0.05,
+            backgroundSize: isPortrait ? "45%" : "35%",
+            pointerEvents: "none",
+            zIndex: 0,
           },
-          pointerEvents: "none",
-          zIndex: 0,
-        },
         }),
       }}
     >

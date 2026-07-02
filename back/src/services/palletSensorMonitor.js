@@ -47,7 +47,7 @@ function appendSensorStatusLog(sensorId, status) {
 
 // กรณีใช้ sw เดียว ให้ใช้ sw-board ตัวเดียวใน config.json
 function getSwBoardConfig(config) {
-  return (config["sw-board"] || [])[0] || {};
+  return (config["Sensors"] || [])[0] || {};
 }
 // function getSwBoardConfig(config) {
 //   const list = config["sw-board"] || [];
@@ -171,8 +171,7 @@ async function pollSensor() {
       }
     }
 
-    if (sensorOn && onStartedAt) {
-      const elapsedMs = now - onStartedAt;
+    if (sensorOn && onStartedAt) {           const elapsedMs = now - onStartedAt;
       const elapsedSecond = Math.floor(elapsedMs / 1000);
 
       if (elapsedSecond > 0 && elapsedSecond !== lastPrintedSecond) {
@@ -193,7 +192,7 @@ async function pollSensor() {
       }
     }
   } catch (err) {
-    console.error("[PalletSensor] error:", err.message);
+    // console.error("[PalletSensor] error:", err.message);
   }
 }
 

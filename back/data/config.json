@@ -18,11 +18,11 @@
     {
       "id": "c040",
       "name": "C040",
-      "deviceNum": "8154",
+      "deviceNum": "8899",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/C0401.png",
       "modelProcessCode": {
-        "delivery": "FPTask"
+        "delivery": "Cshelf"
       }
     },
     {
@@ -122,14 +122,44 @@
       ],
       "c040": [
         {
-          "id": "s-t1",
-          "name": "Test1",
-          "rcsPosition": "Test1"
+          "id": "s-a1",
+          "name": "A1",
+          "rcsPosition": "A1"
         },
         {
-          "id": "s-t2",
-          "name": "Test2",
-          "rcsPosition": "Test2"
+          "id": "s-a2",
+          "name": "A2",
+          "rcsPosition": "A2"
+        },
+        {
+          "id": "s-b1",
+          "name": "B1",
+          "rcsPosition": "B1"
+        },
+        {
+          "id": "s-b2",
+          "name": "B2",
+          "rcsPosition": "B2"
+        },
+        {
+          "id": "s-c1",
+          "name": "C1",
+          "rcsPosition": "C1"
+        },
+        {
+          "id": "s-c2",
+          "name": "C2",
+          "rcsPosition": "C2"
+        },
+        {
+          "id": "s-c3",
+          "name": "C3",
+          "rcsPosition": "C3"
+        },
+        {
+          "id": "s-c4",
+          "name": "C4",
+          "rcsPosition": "C4"
         }
       ],
       "c100": [
@@ -198,7 +228,7 @@
       "dropId": "B3"
     }
   ],
-  "sw-board" :[
+  "sw-board": [
     {
       "id": "sw-board-sw2",
       "inputIndex": 5

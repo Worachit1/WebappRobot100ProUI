@@ -26,7 +26,7 @@ let onStartedAt = null;
 let lastPrintedSecond = 0;
 let alreadySent = false;
 
-const SENSOR_STATUS_LOG = path.join(__dirname, "../logs/sensor-status.log");
+const SENSOR_STATUS_LOG = path.join(__dirname, "../../logs/sensor-status.log");
 
 function appendSensorStatusLog(sensorId, status) {
   const timestamp = new Date().toISOString();

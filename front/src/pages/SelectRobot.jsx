@@ -97,9 +97,7 @@ function SelectRobot() {
     navigate(
       `/pickup-select?robotId=${encodeURIComponent(
         selectedRobot.id,
-      )}&robotName=${encodeURIComponent(
-        selectedRobot.name,
-      )}`,
+      )}&robotName=${encodeURIComponent(selectedRobot.name)}`,
     );
   };
 
@@ -108,13 +106,13 @@ function SelectRobot() {
       title="Select Robot"
       onBack={() => navigate("/")}
       onHome={() => navigate("/")}
-      contentMaxWidth={900}
-      headerMaxWidth={900}
+      contentMaxWidth={1180}
+      headerMaxWidth={1180}
     >
       <Box
         sx={{
           width: "100%",
-          maxWidth: 900,
+          maxWidth: 1180,
           mx: "auto",
           p: 1,
         }}
@@ -141,26 +139,37 @@ function SelectRobot() {
           <>
             <Box
               sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: 4,
+                display: "flex",
+                gap: 5,
                 mb: 4,
-                justifyItems: "center",
+                overflowX: "auto",
+                overflowY: "hidden",
+                px: 1,
+                py: 2,
+                WebkitOverflowScrolling: "touch",
               }}
             >
               {robots.map((item) => (
-                <RobotCard
+                <Box
                   key={item.id}
-                  robot={item}
-                  selected={selectedRobot?.id === item.id}
-                  onSelect={setSelectedRobot}
-                />
+                  sx={{
+                    flex: "0 0 210px",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <RobotCard
+                    robot={item}
+                    selected={selectedRobot?.id === item.id}
+                    onSelect={setSelectedRobot}
+                  />
+                </Box>
               ))}
             </Box>
 
             <Box
               sx={{
-                width: "50%",
+                width: 320,
                 mx: "auto",
               }}
             >
@@ -169,10 +178,10 @@ function SelectRobot() {
                 variant="contained"
                 disabled={!selectedRobot}
                 onClick={handleNext}
-                sx= {{
-                    borderRadius: "4px",
-                    p:1,
-                    fontWeight:900,
+                sx={{
+                  borderRadius: "4px",
+                  p: 2,
+                  fontWeight: 900,
                 }}
               >
                 Next

@@ -50,7 +50,7 @@ function ScreenLayout({
       <Box
         sx={{
           width: "100%",
-          maxWidth: 650,
+          maxWidth: 1180,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -91,7 +91,7 @@ function ScreenLayout({
         sx={{
           mt: 2,
           width: "100%",
-          maxWidth: 650,
+          maxWidth: 1180,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

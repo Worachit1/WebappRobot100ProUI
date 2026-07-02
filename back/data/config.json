@@ -26,13 +26,23 @@
       }
     },
     {
+      "id": "c100",
+      "name": "C100",
+      "deviceNum": "C100",
+      "rcsId": "rcs-1",
+      "imageUrl": "/assets/robot/C0401.png",
+      "modelProcessCode": {
+        "delivery": "Cshelf"
+      }
+    },
+    {
       "id": "d150d",
       "name": "D150D",
-      "deviceNum": "8154",
+      "deviceNum": "D001",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/D150D1.png",
       "modelProcessCode": {
-        "delivery": "FPTask"
+        "delivery": "ForkLiftTask"
       }
     },
     {
@@ -121,6 +131,50 @@
           "name": "Test2",
           "rcsPosition": "Test2"
         }
+      ],
+      "c100": [
+        {
+          "id": "s-a1-1",
+          "name": "A1-1",
+          "rcsPosition": "A1-1"
+        },
+        {
+          "id": "s-b1-1",
+          "name": "B1-1",
+          "rcsPosition": "B1-1"
+        },
+        {
+          "id": "s-b2-1",
+          "name": "B2-1",
+          "rcsPosition": "B2-1"
+        }
+      ],
+      "d150d": [
+        {
+          "id": "s-a2-1",
+          "name": "A2-1",
+          "rcsPosition": "A2-1"
+        },
+        {
+          "id": "s-a3-1",
+          "name": "A3-1",
+          "rcsPosition": "A3-1"
+        },
+        {
+          "id": "s-b3-1",
+          "name": "B3-1",
+          "rcsPosition": "B3-1"
+        },
+        {
+          "id": "s-b4-1",
+          "name": "B4-1",
+          "rcsPosition": "B4-1"
+        },
+        {
+          "id": "s-pallet1",
+          "name": "Pallet1",
+          "rcsPosition": "Pallet1"
+        }
       ]
     }
   ],
@@ -142,6 +196,12 @@
       "robotId": "fp150",
       "pickupId": "A1",
       "dropId": "B3"
+    }
+  ],
+  "sw-board" :[
+    {
+      "id": "sw-board-sw2",
+      "inputIndex": 5
     }
   ]
 }

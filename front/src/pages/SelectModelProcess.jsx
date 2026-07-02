@@ -171,7 +171,7 @@ function SelectModelProcess() {
             boxSizing: "border-box",
           }}
         >
-          MODEL PROCESS SELECT
+          MODEL PROCESS TASK SELECT
         </Typography>
 
         <Box sx={{ border: "1px solid #ddd", p: 2, mb: 3 }}>
@@ -194,7 +194,7 @@ function SelectModelProcess() {
               fontWeight={900}
               sx={{ fontSize: { xs: 18, md: 20 }, mb: 1.5 }}
             >
-              MODEL PROCESS
+              MODEL PROCESS TASK
             </Typography>
 
             <Select

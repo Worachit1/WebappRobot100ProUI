@@ -42,6 +42,7 @@ function HistoryCard({ item }) {
     >
       <Box>
         <Typography variant="body2">Order ID : {item.orderId}</Typography>
+        <Typography variant="body2">Robot : {item.robotName}</Typography>
         <Typography variant="body2">
           Description : {item.pickup?.name} → {item.drop?.name}
         </Typography>
@@ -57,7 +58,7 @@ function HistoryCard({ item }) {
 
 function History() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState("ALL");
+  const [status, setStatus] = useState("SUCCESS");
   const [query, setQuery] = useState("");
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);

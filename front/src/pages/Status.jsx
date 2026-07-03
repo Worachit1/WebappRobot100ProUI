@@ -118,6 +118,21 @@ function Status() {
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const AGV_STATUS_COLOR = {
+    OFFLINE: "#616161", // เทา
+    FREE: "#2e7d32", // เขียว
+    ALARM: "#d32f2f", // แดง
+    INITIALIZING: "#fb8c00", // ส้ม
+    RUNNING: "#1976d2", // น้ำเงิน
+    CHARGING: "#00897b", // เขียวอมฟ้า
+    UPGRADING: "#7b1fa2", // ม่วง
+  };
+
+  const CHARGING_COLOR = {
+    CHARGING: "#2e7d32",
+    "NOT CHARGING": "#111827",
+  };
+
   useEffect(() => {
     fetchConfig().then((data) => {
       setConfig(data);
@@ -165,6 +180,10 @@ function Status() {
   const agvStatus = deviceStatus?.agvStatus || deviceStatus?.state || "-";
   const position = deviceStatus?.devicePosition || "-";
   const charging = deviceStatus?.charging ? "CHARGING" : "NOT CHARGING";
+
+  const agvStatusColor = AGV_STATUS_COLOR[agvStatus] || "#111827";
+
+  const chargingColor = CHARGING_COLOR[charging] || "#111827";
 
   const orderStatus = latestOrder?.status || "-";
 
@@ -359,7 +378,8 @@ function Status() {
                           icon={<WifiIcon />}
                           title="STATUS"
                           value={agvStatus}
-                          color="#2e7d32"
+                          color={agvStatusColor}
+                          valueColor={agvStatusColor}
                         />
 
                         <InfoCard
@@ -445,7 +465,8 @@ function Status() {
                           icon={<BatteryChargingFullIcon />}
                           title="CHARGING"
                           value={charging}
-                          color={deviceStatus?.charging ? "#2e7d32" : "#6b7280"}
+                          color={chargingColor}
+                          valueColor={chargingColor}
                         />
                       </Box>
                     )}

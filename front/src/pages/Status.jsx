@@ -24,6 +24,8 @@ import { formatDateTime } from "../config/formatDatetime";
 import ScreenLayout from "../components/ScreenLayout.jsx";
 import { fetchConfig, fetchRobotStatus } from "../api/client.js";
 
+const STATUS_SELECTED_ROBOT_KEY = "statusSelectedRobotId";
+
 function InfoCard({
   icon,
   title,
@@ -136,7 +138,15 @@ function Status() {
   useEffect(() => {
     fetchConfig().then((data) => {
       setConfig(data);
-      if (data.robots?.length) {
+
+      const savedRobotId = localStorage.getItem(STATUS_SELECTED_ROBOT_KEY);
+      const exists = data.robots?.some(
+        (item) => String(item.id) === String(savedRobotId),
+      );
+
+      if (exists) {
+        setRobotId(savedRobotId);
+      } else if (data.robots?.length) {
         setRobotId(data.robots[0].id);
       }
     });
@@ -236,7 +246,10 @@ function Status() {
             <FormControl fullWidth sx={{ mb: 1.5 }}>
               <Select
                 value={robotId}
-                onChange={(e) => setRobotId(e.target.value)}
+                onChange={(e) => {
+                  setRobotId(e.target.value);
+                  localStorage.setItem(STATUS_SELECTED_ROBOT_KEY, e.target.value);
+                }}
                 sx={{
                   bgcolor: "#fff",
                   borderRadius: "4px",

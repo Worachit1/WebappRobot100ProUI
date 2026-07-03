@@ -2,7 +2,6 @@
   "sendEnabled": true,
   "pollingIntervalMs": 2000,
   "statusRefreshIntervalMs": 5000,
-  "modelProcessCode": "liftMoveShelf157",
   "fromSystem": "TSC",
   "rcs": [
     {
@@ -40,7 +39,7 @@
       "name": "C100",
       "deviceNum": "C100",
       "rcsId": "rcs-1",
-      "imageUrl": "/assets/robot/C0401.png",
+      "imageUrl": "/assets/robot/C1001.png",
       "modelProcessCode": {
         "delivery": "Cshelf"
       }

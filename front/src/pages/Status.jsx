@@ -24,7 +24,13 @@ import { formatDateTime } from "../config/formatDatetime";
 import ScreenLayout from "../components/ScreenLayout.jsx";
 import { fetchConfig, fetchRobotStatus } from "../api/client.js";
 
-function InfoCard({ icon, title, value, color = "#2d49ae" }) {
+function InfoCard({
+  icon,
+  title,
+  value,
+  color = "#2d49ae",
+  valueColor = "#111827",
+}) {
   return (
     <Box
       sx={{
@@ -62,7 +68,7 @@ function InfoCard({ icon, title, value, color = "#2d49ae" }) {
         sx={{
           fontSize: { xs: 14, md: 16 },
           fontWeight: 900,
-          color: "#111827",
+          color: valueColor,
           wordBreak: "break-word",
           lineHeight: 1.15,
         }}
@@ -159,6 +165,15 @@ function Status() {
   const agvStatus = deviceStatus?.agvStatus || deviceStatus?.state || "-";
   const position = deviceStatus?.devicePosition || "-";
   const charging = deviceStatus?.charging ? "CHARGING" : "NOT CHARGING";
+
+  const orderStatus = latestOrder?.status || "-";
+
+  const orderStatusColor =
+    orderStatus === "SUCCESS"
+      ? "#2e7d32"
+      : orderStatus === "FAILED"
+        ? "#d32f2f"
+        : "#111827";
 
   return (
     <ScreenLayout
@@ -502,8 +517,9 @@ function Status() {
                     <InfoCard
                       icon={<TaskAltIcon />}
                       title="ORDER STATUS"
-                      value={latestOrder?.status || "-"}
-                      color="#2e7d32"
+                      value={orderStatus}
+                      valueColor={orderStatusColor}
+                      color={orderStatusColor}
                     />
                   </Box>
                 </Box>

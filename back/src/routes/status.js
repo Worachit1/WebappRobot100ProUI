@@ -58,29 +58,18 @@ router.get("/:robotId", async (req, res) => {
     deviceStatus = { error: message, url };
   }
 
-const history = await getHistory();
+  const history = await getHistory();
+  const latest = history.find((item) => item.robotId === robotId) || null;
 
-const workingStatuses = [
-  "SENDING",
-  "RUNNING",
-  "QUEUED",
-];
-
-const currentOrders = history.filter(
-  (item) =>
-    String(item.robotId) === String(robotId) &&
-    workingStatuses.includes(item.status),
-);
-
-res.json({
-  robot: {
-    id: robot.id,
-    name: robot.name,
-    deviceNum: robot.deviceNum,
-  },
-  deviceStatus,
-  currentOrders,
-});
+  res.json({
+    robot: {
+      id: robot.id,
+      name: robot.name,
+      deviceNum: robot.deviceNum
+    },
+    deviceStatus,
+    latestOrder: latest
+  });
 });
 
 module.exports = router;

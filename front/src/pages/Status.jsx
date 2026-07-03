@@ -180,7 +180,7 @@ function Status() {
   }, [config, robotId]);
 
   const deviceStatus = status?.deviceStatus || {};
-  const currentOrders = status?.currentOrders || [];
+  const latestOrder = status?.latestOrder || null;
 
   const battery = Number(deviceStatus?.battery ?? 0);
   const safeBattery = Number.isFinite(battery)
@@ -195,7 +195,7 @@ function Status() {
 
   const chargingColor = CHARGING_COLOR[charging] || "#111827";
 
-  const orderStatus = currentOrders[0]?.status || "-";
+  const orderStatus = latestOrder?.status || "-";
 
   const orderStatusColor =
     orderStatus === "SUCCESS"
@@ -248,10 +248,7 @@ function Status() {
                 value={robotId}
                 onChange={(e) => {
                   setRobotId(e.target.value);
-                  localStorage.setItem(
-                    STATUS_SELECTED_ROBOT_KEY,
-                    e.target.value,
-                  );
+                  localStorage.setItem(STATUS_SELECTED_ROBOT_KEY, e.target.value);
                 }}
                 sx={{
                   bgcolor: "#fff",
@@ -488,6 +485,7 @@ function Status() {
                     )}
                   </Box>
                 </Box>
+
                 <Box
                   sx={{
                     bgcolor: "#fff",
@@ -513,77 +511,51 @@ function Status() {
                         fontSize: { xs: 14, md: 16 },
                       }}
                     >
-                      CURRENT ORDERS
+                      LAST ORDER
                     </Typography>
                   </Box>
 
-                  {currentOrders.length === 0 ? (
-                    <Typography sx={{ fontWeight: 900, color: "#667085" }}>
-                      ไม่มีงานที่กำลังทำงาน
-                    </Typography>
-                  ) : (
-                    <Box
-                      sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-                    >
-                      {currentOrders.map((order) => {
-                        const statusColor =
-                          order.status === "SUCCESS"
-                            ? "#2e7d32"
-                            : order.status === "FAILED"
-                              ? "#d32f2f"
-                              : order.status === "RUNNING"
-                                ? "#1976d2"
-                                : order.status === "SENDING"
-                                  ? "#ed6c02"
-                                  : "#111827";
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: {
+                        xs: "1fr",
+                        md: "1fr 1.4fr 1fr 1fr",
+                      },
+                      gap: 1,
+                    }}
+                  >
+                    <InfoCard
+                      icon={<AssignmentIcon />}
+                      title="ORDER ID"
+                      value={latestOrder?.orderId || "-"}
+                      color="#2d49ae"
+                    />
 
-                        return (
-                          <Box
-                            key={order.orderId}
-                            sx={{
-                              display: "grid",
-                              gridTemplateColumns: {
-                                xs: "1fr",
-                                md: "1fr 1.4fr 1fr 1fr",
-                              },
-                              gap: 1,
-                            }}
-                          >
-                            <InfoCard
-                              icon={<AssignmentIcon />}
-                              title="ORDER ID"
-                              value={order.orderId || "-"}
-                              color="#2d49ae"
-                            />
+                    <InfoCard
+                      icon={<RouteIcon />}
+                      title="PICKUP → DROP"
+                      value={`${latestOrder?.pickup?.name || "-"} → ${
+                        latestOrder?.drop?.name || "-"
+                      }`}
+                      color="#7b1fa2"
+                    />
 
-                            <InfoCard
-                              icon={<RouteIcon />}
-                              title="ROUTE"
-                              value={`${order.pickup?.name || "-"} → ${
-                                order.drop?.name || "-"
-                              }`}
-                              color="#7b1fa2"
-                            />
+                    <InfoCard
+                      icon={<AccessTimeIcon />}
+                      title="START"
+                      value={formatDateTime(latestOrder?.startedAt) || "-"}
+                      color="#0288d1"
+                    />
 
-                            <InfoCard
-                              icon={<AccessTimeIcon />}
-                              title="START"
-                              value={formatDateTime(order.startedAt) || "-"}
-                              color="#0288d1"
-                            />
-
-                            <InfoCard
-                              icon={<TaskAltIcon />}
-                              title="ORDER STATUS"
-                              value={order.status || "-"}
-                              valueColor={statusColor}
-                              color={statusColor}
-                            />
-                          </Box>
-                        );
-                      })}
-                    </Box>
-                  )}
+                    <InfoCard
+                      icon={<TaskAltIcon />}
+                      title="ORDER STATUS"
+                      value={orderStatus}
+                      valueColor={orderStatusColor}
+                      color={orderStatusColor}
+                    />
+                  </Box>
                 </Box>
               </>
             )}

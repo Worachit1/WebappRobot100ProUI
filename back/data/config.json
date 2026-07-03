@@ -10,7 +10,17 @@
       "name": "RCS-1",
       "baseUrl": "http://192.168.8.100:7000",
       "areaIds": [
-        1
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
       ]
     }
   ],
@@ -18,7 +28,7 @@
     {
       "id": "c040",
       "name": "C040",
-      "deviceNum": "8899",
+      "deviceNum": "c040",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/C0401.png",
       "modelProcessCode": {
@@ -122,44 +132,39 @@
       ],
       "c040": [
         {
-          "id": "s-a1",
-          "name": "A1",
-          "rcsPosition": "A1"
+          "id": "s-a1-1",
+          "name": "A1-1",
+          "rcsPosition": "A1-1"
         },
         {
-          "id": "s-a2",
-          "name": "A2",
-          "rcsPosition": "A2"
+          "id": "s-b1-1",
+          "name": "B1-1",
+          "rcsPosition": "B1-1"
         },
         {
-          "id": "s-b1",
-          "name": "B1",
-          "rcsPosition": "B1"
+          "id": "s-b2-1",
+          "name": "B2-1",
+          "rcsPosition": "B2-1"
         },
         {
-          "id": "s-b2",
-          "name": "B2",
-          "rcsPosition": "B2"
+          "id": "s-rack1",
+          "name": "Rack1",
+          "rcsPosition": "Rack1"
         },
         {
-          "id": "s-c1",
-          "name": "C1",
-          "rcsPosition": "C1"
+          "id": "s-rack2",
+          "name": "Rack2",
+          "rcsPosition": "Rack2"
         },
         {
-          "id": "s-c2",
-          "name": "C2",
-          "rcsPosition": "C2"
+          "id": "s-rack3",
+          "name": "Rack3",
+          "rcsPosition": "Rack3"
         },
         {
-          "id": "s-c3",
-          "name": "C3",
-          "rcsPosition": "C3"
-        },
-        {
-          "id": "s-c4",
-          "name": "C4",
-          "rcsPosition": "C4"
+          "id": "s-rack4",
+          "name": "Rack4",
+          "rcsPosition": "Rack4"
         }
       ],
       "c100": [
@@ -177,6 +182,26 @@
           "id": "s-b2-1",
           "name": "B2-1",
           "rcsPosition": "B2-1"
+        },
+        {
+          "id": "s-rack1",
+          "name": "Rack1",
+          "rcsPosition": "Rack1"
+        },
+        {
+          "id": "s-rack2",
+          "name": "Rack2",
+          "rcsPosition": "Rack2"
+        },
+        {
+          "id": "s-rack3",
+          "name": "Rack3",
+          "rcsPosition": "Rack3"
+        },
+        {
+          "id": "s-rack4",
+          "name": "Rack4",
+          "rcsPosition": "Rack4"
         }
       ],
       "d150d": [
@@ -201,9 +226,34 @@
           "rcsPosition": "B4-1"
         },
         {
+          "id": "s-cart1",
+          "name": "Cart1",
+          "rcsPosition": "Cart1"
+        },
+        {
+          "id": "s-cart2",
+          "name": "Cart2",
+          "rcsPosition": "Cart2"
+        },
+        {
           "id": "s-pallet1",
           "name": "Pallet1",
           "rcsPosition": "Pallet1"
+        },
+        {
+          "id": "s-pallet2",
+          "name": "Pallet2",
+          "rcsPosition": "Pallet2"
+        },
+        {
+          "id": "s-pallet3",
+          "name": "Pallet3",
+          "rcsPosition": "Pallet3"
+        },
+        {
+          "id": "s-pallet4",
+          "name": "Pallet4",
+          "rcsPosition": "Pallet4"
         }
       ]
     }

@@ -3,8 +3,11 @@ const axios = require("axios");
 const { getConfig } = require("./store");
 const { dispatchOrderImmediate } = require("./queue");
 
-const IO_READ_URL = "http://192.168.1.99/1234/2/";
-const IO_WRITE_URL = "http://192.168.1.99/1234/6/";
+// const IO_READ_URL = "http://192.168.1.99/1234/2/";
+// const IO_WRITE_URL = "http://192.168.1.99/1234/6/";
+
+const IO_READ_URL = "http://192.168.8.100/1234/2/";
+const IO_WRITE_URL = "http://192.168.8.100/1234/6/";
 
 const READ_COMMAND = "s=----";
 const IO_TIMEOUT_MS = 1000;

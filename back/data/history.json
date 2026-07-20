@@ -1,5 +1,129 @@
 [
   {
+    "orderId": "1783668818714606417",
+    "robotId": "e10",
+    "robotName": "E10",
+    "pickup": {
+      "id": "s-a1-5",
+      "name": "A1-5",
+      "rcsPosition": "A1-5"
+    },
+    "drop": {
+      "id": "s-b1-5",
+      "name": "B1-5",
+      "rcsPosition": "B1-5"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-10T07:33:38.714Z",
+    "startedAt": "2026-07-10T07:33:38.716Z",
+    "rcsPayload": {
+      "modelProcessCode": "FPTask",
+      "fromSystem": "TSC",
+      "orderId": "1783668818714606417",
+      "taskOrderDetail": [
+        {
+          "taskPath": "A1-5,B1-5",
+          "deviceNum": "8154"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-10T07:33:59.759Z",
+    "error": "connect ETIMEDOUT 192.168.8.100:7000"
+  },
+  {
+    "orderId": "1783668549974179768",
+    "robotId": "e10",
+    "robotName": "E10",
+    "pickup": {
+      "id": "s-a1-5",
+      "name": "A1-5",
+      "rcsPosition": "A1-5"
+    },
+    "drop": {
+      "id": "s-b1-5",
+      "name": "B1-5",
+      "rcsPosition": "B1-5"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-10T07:29:09.974Z",
+    "startedAt": "2026-07-10T07:29:09.977Z",
+    "rcsPayload": {
+      "modelProcessCode": "FPTask",
+      "fromSystem": "TSC",
+      "orderId": "1783668549974179768",
+      "taskOrderDetail": [
+        {
+          "taskPath": "A1-5,B1-5",
+          "deviceNum": "8154"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-10T07:29:31.026Z",
+    "error": "connect ETIMEDOUT 192.168.8.100:7000"
+  },
+  {
+    "orderId": "178366836891777302",
+    "robotId": "e10",
+    "robotName": "E10",
+    "pickup": {
+      "id": "s-a1-5",
+      "name": "A1-5",
+      "rcsPosition": "A1-5"
+    },
+    "drop": {
+      "id": "s-b1-5",
+      "name": "B1-5",
+      "rcsPosition": "B1-5"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-10T07:26:08.917Z",
+    "startedAt": "2026-07-10T07:26:08.918Z",
+    "rcsPayload": {
+      "modelProcessCode": "FPTask",
+      "fromSystem": "TSC",
+      "orderId": "178366836891777302",
+      "taskOrderDetail": [
+        {
+          "taskPath": "A1-5,B1-5",
+          "deviceNum": "8154"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-10T07:26:29.954Z",
+    "error": "connect ETIMEDOUT 192.168.8.100:7000"
+  },
+  {
+    "orderId": "1783667405900349579",
+    "robotId": "e10",
+    "robotName": "E10",
+    "pickup": {
+      "id": "s-a1-5",
+      "name": "A1-5",
+      "rcsPosition": "A1-5"
+    },
+    "drop": {
+      "id": "s-b1-5",
+      "name": "B1-5",
+      "rcsPosition": "B1-5"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-10T07:10:05.900Z",
+    "startedAt": "2026-07-10T07:10:05.901Z",
+    "rcsPayload": {
+      "modelProcessCode": "FPTask",
+      "fromSystem": "TSC",
+      "orderId": "1783667405900349579",
+      "taskOrderDetail": [
+        {
+          "taskPath": "A1-5,B1-5",
+          "deviceNum": "8154"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-10T07:10:26.932Z",
+    "error": "connect ETIMEDOUT 192.168.8.100:7000"
+  },
+  {
     "orderId": "178298710395531333",
     "robotId": "c040",
     "robotName": "C040",

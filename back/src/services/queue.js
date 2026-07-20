@@ -1,5 +1,5 @@
 const { getConfig, getHistory, saveHistory } = require("./store");
-const { sendTaskOrder } = require("./rcs");
+const { sendTaskOrder, sendTaskOrderTuskrobot } = require("./rcs");
 
 async function updateHistory(orderId, updates) {
   const history = await getHistory();
@@ -30,7 +30,7 @@ function getModelProcessCode(robot, orderType) {
 }
 
 async function dispatchOrderImmediate(order, context) {
-  const { robot, startSpot, endSpot, rcsBaseUrl } = context;
+  const { robot, startSpot, endSpot, rcsBaseUrl, useTuskrobotApi } = context;
 
   const config = await getConfig();
   const now = new Date().toISOString();
@@ -57,6 +57,18 @@ async function dispatchOrderImmediate(order, context) {
       },
     ],
   };
+
+  const tuskrobotPayload = {
+    taskId: order.orderId,
+    targets: [startSpot.rcsPosition, endSpot.rcsPosition],
+    deviceId : robot.deviceNum,
+    fromSystem: config.fromSystem,
+  };
+
+  const configId = order.configId || modelProcessCode;
+  if (configId) {
+    tuskrobotPayload.configId = configId;
+  }
 
   await appendHistory({
     orderId: order.orderId,
@@ -86,7 +98,9 @@ async function dispatchOrderImmediate(order, context) {
   }
 
   try {
-    const sendResult = await sendTaskOrder(rcsBaseUrl, payload);
+    const sendResult = useTuskrobotApi
+      ? await sendTaskOrderTuskrobot(rcsBaseUrl, tuskrobotPayload)
+      : await sendTaskOrder(rcsBaseUrl, payload);
     const ok = sendResult && Number(sendResult.code) === 1000;
 
     if (!ok) {

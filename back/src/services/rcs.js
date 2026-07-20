@@ -73,9 +73,20 @@ async function getDeviceStatusFromAllAreas(baseUrl, deviceKeys, areaIds) {
   return { code: 1001, data: null, desc: "Device not found in any area" };
 }
 
+// tuskrobot 
+async function sendTaskOrderTuskrobot(baseUrl, payload) {
+  const url = `${baseUrl}/rpc/createTask`;
+  console.log("[RCS] POST URL:", url);
+  console.log("[RCS] POST BODY:", JSON.stringify(payload, null, 2));
+  const res = await axios.post(url, payload);
+  console.log("[RCS] POST RESPONSE:", JSON.stringify(res.data, null, 2));
+  return res.data;
+}
+
 module.exports = {
   sendTaskOrder,
   getTaskOrderStatus,
   getDeviceListByArea,
-  getDeviceStatusFromAllAreas
+  getDeviceStatusFromAllAreas,
+  sendTaskOrderTuskrobot
 };

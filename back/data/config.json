@@ -27,7 +27,7 @@
     {
       "id": "c040",
       "name": "C040",
-      "deviceNum": "c040",
+      "deviceNum": "C040",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/C0401.png",
       "modelProcessCode": {
@@ -253,6 +253,18 @@
           "id": "s-pallet4",
           "name": "Pallet4",
           "rcsPosition": "Pallet4"
+        }
+      ],
+      "e10": [
+        {
+          "id": "s-a1-5",
+          "name": "A1-5",
+          "rcsPosition": "A1-5"
+        },
+        {
+          "id": "s-b1-5",
+          "name": "B1-5",
+          "rcsPosition": "B1-5"
         }
       ]
     }

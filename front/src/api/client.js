@@ -79,6 +79,13 @@ export async function createOrder(payload) {
   });
 }
 
+export async function createOrderTuskrobot(payload) {
+  return apiRequest("/orders/tuskrobot", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function fetchMachineDropOptions() {
   return apiRequest("/orders/machine-drop/options");
 }

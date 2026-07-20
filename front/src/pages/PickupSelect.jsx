@@ -11,7 +11,12 @@ import Swal from "sweetalert2";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import ScreenLayout from "../components/ScreenLayout.jsx";
-import { fetchSport, fetchConfig, createOrder } from "../api/client.js";
+import {
+  fetchSport,
+  fetchConfig,
+  createOrder,
+  createOrderTuskrobot,
+} from "../api/client.js";
 
 function PickupSelect() {
   const navigate = useNavigate();
@@ -114,13 +119,18 @@ function PickupSelect() {
     try {
       setConfirmLoading(true);
 
-      const res = await createOrder({
+      const orderPayload = {
         robotId,
         pickupId: selectedPickup.id,
         dropId: selectedDrop.id,
         modelProcessType: selectedModelProcess.type,
         modelProcessCode: selectedModelProcess.code,
-      });
+      };
+
+      const res =
+        String(robotId) === "e10"
+          ? await createOrderTuskrobot(orderPayload)
+          : await createOrder(orderPayload);
 
       await Swal.fire({
         icon: "success",

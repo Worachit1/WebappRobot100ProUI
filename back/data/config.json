@@ -27,21 +27,21 @@
     {
       "id": "c040",
       "name": "C040",
-      "deviceNum": "C040",
+      "deviceNum": "C04-1",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/C0401.png",
       "modelProcessCode": {
-        "delivery": "liftMoveShelf21"
+        "delivery": "CmoveShelf"
       }
     },
     {
       "id": "c100",
       "name": "C100",
-      "deviceNum": "C100",
+      "deviceNum": "C100-1",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/C1001.png",
       "modelProcessCode": {
-        "delivery": "Cshelf"
+        "delivery": "CmoveShelf"
       }
     },
     {
@@ -51,17 +51,17 @@
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/D150D1.png",
       "modelProcessCode": {
-        "delivery": "ForkLiftTask"
+        "delivery": "forkTemplateNo24"
       }
     },
     {
       "id": "fp150",
       "name": "FP150",
-      "deviceNum": "FP001",
+      "deviceNum": "F001",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/FP1501.png",
       "modelProcessCode": {
-        "delivery": "FPTask"
+        "delivery": "D150T"
       }
     },
     {
@@ -84,9 +84,210 @@
           "rcsPosition": "A1"
         },
         {
-          "id": "s-a1-r",
-          "name": "A1-R",
-          "rcsPosition": "A1-R"
+          "id": "s-a2",
+          "name": "A2",
+          "rcsPosition": "A2"
+        },
+        {
+          "id": "s-b1",
+          "name": "B1",
+          "rcsPosition": "B1"
+        },
+        {
+          "id": "s-b2",
+          "name": "B2",
+          "rcsPosition": "B2"
+        },
+        {
+          "id": "s-c1-f1",
+          "name": "C1-F1",
+          "rcsPosition": "C1-F1"
+        },
+        {
+          "id": "s-c1-f2",
+          "name": "C1-F2",
+          "rcsPosition": "C1-F2"
+        },
+        {
+          "id": "s-c1-f3",
+          "name": "C1-F3",
+          "rcsPosition": "C1-F3"
+        },
+        {
+          "id": "s-c2-f1",
+          "name": "C2-F1",
+          "rcsPosition": "C2-F1"
+        },
+        {
+          "id": "s-c2-f2",
+          "name": "C2-F2",
+          "rcsPosition": "C2-F2"
+        },
+        {
+          "id": "s-c2-f3",
+          "name": "C2-F3",
+          "rcsPosition": "C2-F3"
+        },
+        {
+          "id": "s-d1-f1",
+          "name": "D1-F1",
+          "rcsPosition": "D1-F1"
+        },
+        {
+          "id": "s-d1-f2",
+          "name": "D1-F2",
+          "rcsPosition": "D1-F2"
+        },
+        {
+          "id": "s-d1-f3",
+          "name": "D1-F3",
+          "rcsPosition": "D1-F3"
+        },
+        {
+          "id": "s-d2-f1",
+          "name": "D2-F1",
+          "rcsPosition": "D2-F1"
+        },
+        {
+          "id": "s-d2-f2",
+          "name": "D2-F2",
+          "rcsPosition": "D2-F2"
+        },
+        {
+          "id": "s-d2-f3",
+          "name": "D2-F3",
+          "rcsPosition": "D2-F3"
+        },
+        {
+          "id": "s-e1-f1",
+          "name": "E1-F1",
+          "rcsPosition": "E1-F1"
+        },
+        {
+          "id": "s-e1-f2",
+          "name": "E1-F2",
+          "rcsPosition": "E1-F2"
+        },
+        {
+          "id": "s-e1-f3",
+          "name": "E1-F3",
+          "rcsPosition": "E1-F3"
+        },
+        {
+          "id": "s-e2-f1",
+          "name": "E2-F1",
+          "rcsPosition": "E2-F1"
+        },
+        {
+          "id": "s-e2-f2",
+          "name": "E2-F2",
+          "rcsPosition": "E2-F2"
+        },
+        {
+          "id": "s-e2-f3",
+          "name": "E2-F3",
+          "rcsPosition": "E2-F3"
+        },
+        {
+          "id": "s-f1-f1",
+          "name": "F1-F1",
+          "rcsPosition": "F1-F1"
+        },
+        {
+          "id": "s-f1-f2",
+          "name": "F1-F2",
+          "rcsPosition": "F1-F2"
+        },
+        {
+          "id": "s-f1-f3",
+          "name": "F1-F3",
+          "rcsPosition": "F1-F3"
+        },
+        {
+          "id": "s-f2-f1",
+          "name": "F2-F1",
+          "rcsPosition": "F2-F1"
+        },
+        {
+          "id": "s-f2-f2",
+          "name": "F2-F2",
+          "rcsPosition": "F2-F2"
+        },
+        {
+          "id": "s-f2-f3",
+          "name": "F2-F3",
+          "rcsPosition": "F2-F3"
+        }
+      ],
+      "c040": [
+        {
+          "id": "s-r1",
+          "name": "R1",
+          "rcsPosition": "R1"
+        },
+        {
+          "id": "s-r2",
+          "name": "R2",
+          "rcsPosition": "R2"
+        },
+        {
+          "id": "s-r3",
+          "name": "R3",
+          "rcsPosition": "R3"
+        },
+        {
+          "id": "s-r4",
+          "name": "R4",
+          "rcsPosition": "R4"
+        },
+        {
+          "id": "s-p1",
+          "name": "P1",
+          "rcsPosition": "P1"
+        },
+        {
+          "id": "s-p2",
+          "name": "P2",
+          "rcsPosition": "P2"
+        }
+      ],
+      "c100": [
+        {
+          "id": "s-r1",
+          "name": "R1",
+          "rcsPosition": "R1"
+        },
+        {
+          "id": "s-r2",
+          "name": "R2",
+          "rcsPosition": "R2"
+        },
+        {
+          "id": "s-r3",
+          "name": "R3",
+          "rcsPosition": "R3"
+        },
+        {
+          "id": "s-r4",
+          "name": "R4",
+          "rcsPosition": "R4"
+        },
+        {
+          "id": "s-p1",
+          "name": "P1",
+          "rcsPosition": "P1"
+        },
+        {
+          "id": "s-p2",
+          "name": "P2",
+          "rcsPosition": "P2"
+        }
+      ],
+      "d150d": [
+        {
+          "id": "s-a1",
+          "name": "A1",
+          "rcsPosition": "A1"
         },
         {
           "id": "s-a2",
@@ -94,165 +295,24 @@
           "rcsPosition": "A2"
         },
         {
-          "id": "s-a3",
-          "name": "A3",
-          "rcsPosition": "A3"
+          "id": "s-b1",
+          "name": "B1",
+          "rcsPosition": "B1"
         },
         {
-          "id": "s-b3",
-          "name": "B3",
-          "rcsPosition": "B3"
+          "id": "s-b2",
+          "name": "B2",
+          "rcsPosition": "B2"
         },
         {
-          "id": "s-b4",
-          "name": "B4",
-          "rcsPosition": "B4"
+          "id": "s-g1",
+          "name": "G1",
+          "rcsPosition": "G1"
         },
         {
-          "id": "s-c1-2",
-          "name": "C1-2",
-          "rcsPosition": "C1-2"
-        },
-        {
-          "id": "s-c1-2",
-          "name": "C1-2",
-          "rcsPosition": "C1-2"
-        },
-        {
-          "id": "s-e1-2",
-          "name": "E1-2",
-          "rcsPosition": "E1-2"
-        },
-        {
-          "id": "s-e2",
-          "name": "E2",
-          "rcsPosition": "E2"
-        }
-      ],
-      "c040": [
-        {
-          "id": "s-a1-1",
-          "name": "A1-1",
-          "rcsPosition": "A1-1"
-        },
-        {
-          "id": "s-b1-1",
-          "name": "B1-1",
-          "rcsPosition": "B1-1"
-        },
-        {
-          "id": "s-b2-1",
-          "name": "B2-1",
-          "rcsPosition": "B2-1"
-        },
-        {
-          "id": "s-rack1",
-          "name": "Rack1",
-          "rcsPosition": "Rack1"
-        },
-        {
-          "id": "s-rack2",
-          "name": "Rack2",
-          "rcsPosition": "Rack2"
-        },
-        {
-          "id": "s-rack3",
-          "name": "Rack3",
-          "rcsPosition": "Rack3"
-        },
-        {
-          "id": "s-rack4",
-          "name": "Rack4",
-          "rcsPosition": "Rack4"
-        }
-      ],
-      "c100": [
-        {
-          "id": "s-a1-1",
-          "name": "A1-1",
-          "rcsPosition": "A1-1"
-        },
-        {
-          "id": "s-b1-1",
-          "name": "B1-1",
-          "rcsPosition": "B1-1"
-        },
-        {
-          "id": "s-b2-1",
-          "name": "B2-1",
-          "rcsPosition": "B2-1"
-        },
-        {
-          "id": "s-rack1",
-          "name": "Rack1",
-          "rcsPosition": "Rack1"
-        },
-        {
-          "id": "s-rack2",
-          "name": "Rack2",
-          "rcsPosition": "Rack2"
-        },
-        {
-          "id": "s-rack3",
-          "name": "Rack3",
-          "rcsPosition": "Rack3"
-        },
-        {
-          "id": "s-rack4",
-          "name": "Rack4",
-          "rcsPosition": "Rack4"
-        }
-      ],
-      "d150d": [
-        {
-          "id": "s-a2-1",
-          "name": "A2-1",
-          "rcsPosition": "A2-1"
-        },
-        {
-          "id": "s-a3-1",
-          "name": "A3-1",
-          "rcsPosition": "A3-1"
-        },
-        {
-          "id": "s-b3-1",
-          "name": "B3-1",
-          "rcsPosition": "B3-1"
-        },
-        {
-          "id": "s-b4-1",
-          "name": "B4-1",
-          "rcsPosition": "B4-1"
-        },
-        {
-          "id": "s-cart1",
-          "name": "Cart1",
-          "rcsPosition": "Cart1"
-        },
-        {
-          "id": "s-cart2",
-          "name": "Cart2",
-          "rcsPosition": "Cart2"
-        },
-        {
-          "id": "s-pallet1",
-          "name": "Pallet1",
-          "rcsPosition": "Pallet1"
-        },
-        {
-          "id": "s-pallet2",
-          "name": "Pallet2",
-          "rcsPosition": "Pallet2"
-        },
-        {
-          "id": "s-pallet3",
-          "name": "Pallet3",
-          "rcsPosition": "Pallet3"
-        },
-        {
-          "id": "s-pallet4",
-          "name": "Pallet4",
-          "rcsPosition": "Pallet4"
+          "id": "s-g2",
+          "name": "G2",
+          "rcsPosition": "G2"
         }
       ],
       "e10": [

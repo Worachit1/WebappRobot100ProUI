@@ -16,6 +16,7 @@ import PickupSelect from "./pages/PickupSelect.jsx";
 import DropSelect from "./pages/DropSelect.jsx";
 import SelectModelProcess from "./pages/SelectModelProcess.jsx";
 import Status from "./pages/Status.jsx";
+import AdminPage from "./pages/AdminPage.jsx";
 
 function isAuthed() {
   return Boolean(localStorage.getItem("authUser"));
@@ -134,6 +135,15 @@ function App() {
           element={
             <RequireAuth>
               <Status />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <RequireAuth>
+              <AdminPage />
             </RequireAuth>
           }
         />

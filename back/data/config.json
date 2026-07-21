@@ -9,17 +9,9 @@
       "name": "RCS-1",
       "baseUrl": "http://192.168.8.100:7000",
       "areaIds": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10
+        24,
+        15,
+        8
       ]
     }
   ],
@@ -61,7 +53,7 @@
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/FP1501.png",
       "modelProcessCode": {
-        "delivery": "D150T"
+        "delivery": "FP150Task"
       }
     },
     {

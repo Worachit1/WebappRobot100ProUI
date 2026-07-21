@@ -17,6 +17,7 @@ import DropSelect from "./pages/DropSelect.jsx";
 import SelectModelProcess from "./pages/SelectModelProcess.jsx";
 import Status from "./pages/Status.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
+import PointStatePage from "./pages/PointStatePage.jsx";
 
 function isAuthed() {
   return Boolean(localStorage.getItem("authUser"));
@@ -144,6 +145,15 @@ function App() {
           element={
             <RequireAuth>
               <AdminPage />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/admin/point-state"
+          element={
+            <RequireAuth>
+              <PointStatePage />
             </RequireAuth>
           }
         />

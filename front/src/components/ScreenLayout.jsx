@@ -2,7 +2,7 @@ import React from "react";
 import { Box, IconButton, useMediaQuery } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HomeIcon from "@mui/icons-material/Home";
-
+import SettingsIcon from "@mui/icons-material/Settings";
 import logo100Pro from "../../public/assets/logo 100Pro.png";
 
 function ScreenLayout({

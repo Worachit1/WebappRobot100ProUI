@@ -16,6 +16,9 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import LoginIcon from "@mui/icons-material/Login";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+
 import { useNavigate } from "react-router-dom";
 
 import ScreenLayout from "../components/ScreenLayout.jsx";
@@ -409,9 +412,10 @@ function AdminPage() {
                   <Box
                     sx={{
                       display: "grid",
-                      gridTemplateColumns: { xs: "1fr", md: "1fr 220px" },
+                      gridTemplateColumns: { xs: "1fr", md: "1fr 220px 190px" },
                       gap: 2,
                       alignContent: "center",
+                      alignItems: "center",
                     }}
                   >
                     <Box
@@ -456,6 +460,26 @@ function AdminPage() {
                       }
                       sx={{ alignSelf: "center" }}
                     />
+
+                    <Button
+                      variant="outlined"
+                      startIcon={<LocationOnIcon />}
+                      onClick={() =>
+                        navigate(
+                          `/admin/point-state?robotId=${encodeURIComponent(
+                            robot.id,
+                          )}&robotName=${encodeURIComponent(robot.name || "")}`,
+                        )
+                      }
+                      sx={{
+                        borderRadius: "4px",
+                        fontWeight: 900,
+                        minHeight: 40,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Detail Point State
+                    </Button>
                   </Box>
                 </Box>
 

@@ -13,20 +13,24 @@ import { useNavigate } from "react-router-dom";
 import ScreenLayout from "../components/ScreenLayout.jsx";
 import { fetchHistory } from "../api/client.js";
 import { formatDateTime } from "../config/formatDatetime.js";
+import Pagination from "../components/Pagination.jsx";
+
+const defaultRowsPerPage = 5;
 
 const STATUS_COLORS = {
-  COMPLETED: "success",
-  CANCELLED: "error",
-  RUNNING: "warning",
-  QUEUED: "default",
   SUCCESS: "success",
+  COMPLETED: "success",
   FAILED: "error",
-  EXECUTION_FAILED: "error",
-  SENDING: "warning",
+  SENDING: "info",
+  SEND_SUCCESS: "success",
+  CANCELLED: "default",
+  QUEUED: "info",
+  DELAYING: "warning",
 };
 
 function HistoryCard({ item }) {
   const chipColor = STATUS_COLORS[item.status] || "default";
+
   return (
     <Box
       sx={{
@@ -41,34 +45,77 @@ function HistoryCard({ item }) {
       }}
     >
       <Box>
-        <Typography variant="body2">Order ID : {item.orderId}</Typography>
-        <Typography variant="body2">Robot : {item.robotName}</Typography>
         <Typography variant="body2">
-          Description : {item.pickup?.name} → {item.drop?.name}
+          Order ID : {item.orderId || "-"}
         </Typography>
+
+        <Typography variant="body2">Robot : {item.robotName || "-"}</Typography>
+
+        <Typography variant="body2">
+          Description : {item.pickup?.name || "-"} → {item.drop?.name || "-"}
+        </Typography>
+
         <Typography variant="body2">
           Create At : {formatDateTime(item.startedAt) || "-"}
         </Typography>
-        <Typography variant="body2">Statsu Robot : {item.status}</Typography>
+
+        <Typography variant="body2">
+          Status Robot : {item.status || "-"}
+        </Typography>
       </Box>
-      <Chip label={item.status} color={chipColor} size="small" />
+
+      <Chip label={item.status || "-"} color={chipColor} size="small" />
     </Box>
   );
 }
 
 function History() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState("SUCCESS");
+
+  const [status, setStatus] = useState("ALL");
   const [query, setQuery] = useState("");
   const [items, setItems] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+
+  const rowsPerPage = defaultRowsPerPage;
 
   useEffect(() => {
     setLoading(true);
-    fetchHistory({ status, q: query })
-      .then((data) => setItems(data))
-      .finally(() => setLoading(false));
-  }, [status, query]);
+
+    fetchHistory({
+      status: status === "ALL" ? "" : status,
+      q: query.trim(),
+      page,
+      limit: rowsPerPage,
+    })
+      .then((data) => {
+        console.log("history response:", data);
+
+        setItems(data?.items || []);
+        setTotalItems(data?.pagination?.totalItems || 0);
+      })
+      .catch((err) => {
+        console.error("fetch history error:", err);
+        setItems([]);
+        setTotalItems(0);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [status, query, page]);
+
+  const handleQueryChange = (event) => {
+    setPage(1);
+    setQuery(event.target.value);
+  };
+
+  const handleStatusChange = (event) => {
+    setPage(1);
+    setStatus(event.target.value);
+  };
 
   return (
     <ScreenLayout
@@ -84,12 +131,11 @@ function History() {
         }}
       >
         <Box
-        fullWidth
           sx={{
+            width: "100%",
             mx: "auto",
-            p: 2,
-            marginTop: "5px",
-            padding: "12px",
+            mt: "5px",
+            p: "12px",
           }}
         >
           <Typography
@@ -105,48 +151,91 @@ function History() {
             HISTORY
           </Typography>
 
-          <Box sx={{ display: "flex", width: "100%", gap: 2, m: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: {
+                xs: "column",
+                sm: "row",
+              },
+              width: "100%",
+              gap: 2,
+              mb: 3,
+            }}
+          >
             <TextField
               fullWidth
               size="small"
-              placeholder="search"
+              placeholder="Search"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={handleQueryChange}
             />
+
             <Select
               size="small"
               value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              onChange={handleStatusChange}
+              sx={{
+                minWidth: {
+                  xs: "100%",
+                  sm: 160,
+                },
+              }}
             >
               <MenuItem value="ALL">All</MenuItem>
+              <MenuItem value="COMPLETED">Completed</MenuItem>
               <MenuItem value="SUCCESS">Success</MenuItem>
+              <MenuItem value="CANCELLED">Cancelled</MenuItem>
               <MenuItem value="FAILED">Failed</MenuItem>
-              {/* <MenuItem value="COMPLETED">Completed</MenuItem>
-              <MenuItem value="CANCELLED">Cancel</MenuItem>
-              <MenuItem value="RUNNING">On Task</MenuItem> */}
+              <MenuItem value="DELAYING">Delaying</MenuItem>
+              <MenuItem value="QUEUED">Queued</MenuItem>
             </Select>
           </Box>
+
           {loading ? (
-            <CircularProgress />
-          ) : (
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "column",
-                gap: 2,
-                width: "100%",
+                justifyContent: "center",
+                py: 5,
               }}
             >
-              {items.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                  Not Found
-                </Typography>
-              ) : (
-                items.map((item) => (
-                  <HistoryCard key={item.orderId} item={item} />
-                ))
-              )}
+              <CircularProgress />
             </Box>
+          ) : items.length === 0 ? (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              textAlign="center"
+              sx={{ py: 5 }}
+            >
+              ไม่มีรายการ
+            </Typography>
+          ) : (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                  width: "100%",
+                }}
+              >
+                {items.map((item, index) => (
+                  <HistoryCard
+                    key={item.orderId || `${page}-${index}`}
+                    item={item}
+                  />
+                ))}
+              </Box>
+
+              <Pagination
+                page={page}
+                totalItems={totalItems}
+                rowsPerPage={rowsPerPage}
+                onPageChange={setPage}
+              />
+            </>
           )}
         </Box>
       </Box>

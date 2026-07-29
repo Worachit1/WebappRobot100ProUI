@@ -31,6 +31,8 @@ function PickupSelect() {
   const [dropId, setDropId] = useState("");
   const [robot, setRobot] = useState(null);
   const [modelProcessType, setModelProcessType] = useState("");
+  const [useDelay, setUseDelay] = useState(false);
+  const [delaySeconds, setDelaySeconds] = useState(30);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const [loading, setLoading] = useState(true);
@@ -58,6 +60,36 @@ function PickupSelect() {
       })
       .finally(() => setLoading(false));
   }, [robotId]);
+
+  // อตั้งค่า default modelProcessType เป็น "delivery" ถ้า robot มี modelProcessCode "delivery"
+  // const [modelProcessType, setModelProcessType] = useState("delivery");
+
+  // useEffect(() => {
+  //   if (!robotId) {
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   Promise.all([fetchSport(robotId), fetchConfig()])
+  //     .then(([spotRes, config]) => {
+  //       setPickupPoints(spotRes?.data || []);
+
+  //       const foundRobot = (config?.robots || []).find(
+  //         (item) => String(item.id) === String(robotId),
+  //       );
+
+  //       setRobot(foundRobot || null);
+
+  //       const entries = Object.entries(foundRobot?.modelProcessCode || {});
+
+  //       if (foundRobot?.modelProcessCode?.delivery) {
+  //         setModelProcessType("delivery");
+  //       } else if (entries.length > 0) {
+  //         setModelProcessType(entries[0][0]);
+  //       }
+  //     })
+  //     .finally(() => setLoading(false));
+  // }, [robotId]);
 
   const selectedPickup = useMemo(() => {
     return pickupPoints.find((item) => item.id === pickupId) || null;
@@ -90,6 +122,21 @@ function PickupSelect() {
   }, [modelProcessOptions, modelProcessType]);
 
   const isSingleOption = modelProcessOptions.length === 1;
+  const selectedDelaySeconds = useDelay ? delaySeconds : 0;
+  const delayMinutesText =
+    selectedDelaySeconds === 0
+      ? "0 minutes"
+      : selectedDelaySeconds % 60 === 0
+        ? `${selectedDelaySeconds / 60} minutes`
+        : `${Math.floor(selectedDelaySeconds / 60)} minutes 30 seconds`;
+
+  const decreaseDelay = () => {
+    setDelaySeconds((current) => Math.max(current - 30, 30));
+  };
+
+  const increaseDelay = () => {
+    setDelaySeconds((current) => Math.min(current + 30, 600));
+  };
 
   const handleConfirm = async () => {
     if (!robotId || !selectedPickup || !selectedDrop || !selectedModelProcess) {
@@ -104,6 +151,7 @@ function PickupSelect() {
         <p><b>Pick Up:</b> ${selectedPickup.name}</p>
         <p><b>Drop Off:</b> ${selectedDrop.name}</p>
         <p><b>Task:</b> ${selectedModelProcess.code}</p>
+        <p><b>Delay:</b> ${delayMinutesText}</p>
       </div>
     `,
       icon: "question",
@@ -125,6 +173,7 @@ function PickupSelect() {
         dropId: selectedDrop.id,
         modelProcessType: selectedModelProcess.type,
         modelProcessCode: selectedModelProcess.code,
+        delaySeconds: selectedDelaySeconds,
       };
 
       const res =
@@ -143,7 +192,13 @@ function PickupSelect() {
       `,
       });
 
-      navigate("/");
+      navigate("/status", {
+        state: {
+          orderId: res.orderId,
+          robotId,
+          robotName,
+        },
+      });
     } catch (err) {
       Swal.fire({
         icon: "error",
@@ -290,7 +345,7 @@ function PickupSelect() {
                     mb: 1.5,
                   }}
                 >
-                  MODEL PROCESS TASK
+                  TASK
                 </Typography>
 
                 <Select
@@ -311,7 +366,7 @@ function PickupSelect() {
                     disabled
                     sx={{ fontSize: { xs: 18, md: 20 } }}
                   >
-                    <em>---Model Process Select---</em>
+                    <em>---Task Select---</em>
                   </MenuItem>
 
                   {modelProcessOptions.map((item) => (
@@ -324,6 +379,96 @@ function PickupSelect() {
                     </MenuItem>
                   ))}
                 </Select>
+
+                <Typography
+                  fontWeight={900}
+                  sx={{
+                    fontSize: { xs: 18, md: 20 },
+                    mb: 1.5,
+                  }}
+                >
+                  DELAY BEFORE SEND RCS
+                </Typography>
+
+                <Box
+                  sx={{
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    p: 2,
+                    mb: { xs: 3, md: 5 },
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1.5,
+                  }}
+                >
+                  <Box sx={{ display: "flex", gap: 1 }}>
+                    <Button
+                      fullWidth
+                      variant={!useDelay ? "contained" : "outlined"}
+                      onClick={() => setUseDelay(false)}
+                      sx={{
+                        borderRadius: "4px",
+                        fontWeight: 900,
+                        boxShadow: !useDelay
+                          ? "10px 5px 20px rgba(45, 73, 174, 0.35)"
+                          : "none",
+                      }}
+                    >
+                      Not Delay
+                    </Button>
+
+                    <Button
+                      fullWidth
+                      variant={useDelay ? "contained" : "outlined"}
+                      onClick={() => setUseDelay(true)}
+                      sx={{
+                        borderRadius: "4px",
+                        fontWeight: 900,
+                        boxShadow: useDelay
+                          ? "0 6px 18px rgba(45, 73, 174, 0.35)"
+                          : "none",
+
+                      }}
+                    >
+                      Delay
+                    </Button>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: "52px 1fr 52px",
+                      gap: 1,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      disabled={!useDelay || delaySeconds <= 30}
+                      onClick={decreaseDelay}
+                      sx={{ minWidth: 52, fontWeight: 900 }}
+                    >
+                      -
+                    </Button>
+                    <Typography
+                      sx={{
+                        textAlign: "center",
+                        fontSize: { xs: 18, md: 20 },
+                        fontWeight: 900,
+                      }}
+                    >
+                      {delayMinutesText}
+                    </Typography>
+                    <Button
+                      variant="outlined"
+                      disabled={!useDelay || delaySeconds >= 600}
+                      onClick={increaseDelay}
+                      sx={{ minWidth: 52, fontWeight: 900 }}
+                    >
+                      +
+                    </Button>
+                  </Box>
+                </Box>
               </>
             )}
 

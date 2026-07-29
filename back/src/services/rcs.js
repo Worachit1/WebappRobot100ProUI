@@ -16,6 +16,20 @@ async function getTaskOrderStatus(baseUrl, orderId) {
   return res.data;
 }
 
+async function cancelTask(baseUrl, tasks) {
+  const url = `${baseUrl}/ics/out/task/cancelTask`;
+  console.log("[RCS] CANCEL URL:", url);
+  console.log("[RCS] CANCEL BODY:", JSON.stringify(tasks, null, 2));
+  const res = await axios.post(url, tasks, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    timeout: 10000,
+  });
+  console.log("[RCS] CANCEL RESPONSE:", JSON.stringify(res.data, null, 2));
+  return res.data;
+}
+
 /**
  * Get AGV status list from RCS (IRAYPLE API 4.1.2.1) for one area.
  * Body: areaId, deviceType (0), deviceCode (optional fuzzy filter).
@@ -86,6 +100,7 @@ async function sendTaskOrderTuskrobot(baseUrl, payload) {
 module.exports = {
   sendTaskOrder,
   getTaskOrderStatus,
+  cancelTask,
   getDeviceListByArea,
   getDeviceStatusFromAllAreas,
   sendTaskOrderTuskrobot

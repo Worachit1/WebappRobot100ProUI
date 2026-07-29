@@ -1,7 +1,9 @@
 // order.js
 const express = require("express");
-const { getConfig, getHistory, saveHistory } = require("../services/store");
+const { getConfig, getHistory } = require("../services/store");
 const {
+  cancelQueuedOrder,
+  cancelRunningOrder,
   dispatchOrderImmediate,
   getQueueSnapshot,
 } = require("../services/queue");
@@ -35,7 +37,7 @@ function findSpotById(config, spotId) {
 
 router.post("/", async (req, res) => {
   try {
-    const { robotId, pickupId, dropId, modelProcessType, modelProcessCode } =
+    const { robotId, pickupId, dropId, modelProcessType, modelProcessCode, delaySeconds } =
       req.body || {};
 
     if (!robotId) {
@@ -87,6 +89,7 @@ router.post("/", async (req, res) => {
       robotName: robot.name,
       modelProcessType,
       modelProcessCode,
+      delaySeconds: Math.max(Number(delaySeconds) || 0, 0),
       pickup: {
         id: pickup.id,
         name: pickup.name,
@@ -114,26 +117,15 @@ router.post("/", async (req, res) => {
       rcsBaseUrl,
     });
 
-    if (!result.ok) {
-      return res.status(502).json({
-        error: result.error || result.rcsResponse?.desc || "RCS send failed",
-        orderId,
-        status: "FAILED",
-        rcsResponse: result.rcsResponse,
-      });
-    }
-
     return res.json({
       ok: true,
       orderId,
-      status: "SUCCESS",
-      rcsResponse: result.rcsResponse,
+      status: result.status || "QUEUED",
       data: {
         ...baseOrder,
-        status: "SUCCESS",
-        rcsResponse: result.rcsResponse,
+        status: result.status || "QUEUED",
       },
-      queue: getQueueSnapshot(),
+      queue: await getQueueSnapshot(robot.id),
     });
   } catch (err) {
     console.error("[Orders] create error:", err);
@@ -146,7 +138,7 @@ router.post("/", async (req, res) => {
 
 router.post("/tuskrobot", async (req, res) => {
   try {
-    const { robotId, pickupId, dropId, modelProcessType, modelProcessCode } =
+    const { robotId, pickupId, dropId, modelProcessType, modelProcessCode, delaySeconds } =
       req.body || {};
 
     if (!robotId) {
@@ -198,6 +190,7 @@ router.post("/tuskrobot", async (req, res) => {
       robotName: robot.name,
       modelProcessType,
       modelProcessCode,
+      delaySeconds: Math.max(Number(delaySeconds) || 0, 0),
       pickup: {
         id: pickup.id,
         name: pickup.name,
@@ -226,26 +219,15 @@ router.post("/tuskrobot", async (req, res) => {
       useTuskrobotApi: true,
     });
 
-    if (!result.ok) {
-      return res.status(502).json({
-        error: result.error || result.rcsResponse?.desc || "RCS send failed",
-        orderId,
-        status: "FAILED",
-        rcsResponse: result.rcsResponse,
-      });
-    }
-
     return res.json({
       ok: true,
       orderId,
-      status: "SUCCESS",
-      rcsResponse: result.rcsResponse,
+      status: result.status || "QUEUED",
       data: {
         ...baseOrder,
-        status: "SUCCESS",
-        rcsResponse: result.rcsResponse,
+        status: result.status || "QUEUED",
       },
-      queue: getQueueSnapshot(),
+      queue: await getQueueSnapshot(robot.id),
     });
   } catch (err) {
     console.error("[Orders] create error:", err);
@@ -326,15 +308,6 @@ router.post("/recall", async (req, res) => {
       rcsBaseUrl,
     });
 
-    if (!result.ok) {
-      return res.status(502).json({
-        error: result.error || result.rcsResponse?.desc || "RCS recall failed",
-        orderId,
-        status: "FAILED",
-        rcsResponse: result.rcsResponse,
-      });
-    }
-
     updateBufferStatus(config, pickup.id, {
       robotId: robot.id,
       orderId,
@@ -345,14 +318,12 @@ router.post("/recall", async (req, res) => {
     return res.json({
       ok: true,
       orderId,
-      status: "SUCCESS",
-      rcsResponse: result.rcsResponse,
+      status: result.status || "QUEUED",
       data: {
         ...baseOrder,
-        status: "SUCCESS",
-        rcsResponse: result.rcsResponse,
+        status: result.status || "QUEUED",
       },
-      queue: getQueueSnapshot(),
+      queue: await getQueueSnapshot(robot.id),
     });
   } catch (err) {
     console.error("[Orders Recall] create error:", err);
@@ -365,6 +336,10 @@ router.post("/recall", async (req, res) => {
 
 router.get("/history", async (req, res) => {
   const { status, q, fields } = req.query;
+
+  const page = Math.max(Number(req.query.page) || 1, 1);
+  const limit = Math.max(Number(req.query.limit) || 10, 1);
+
   let history = await getHistory();
 
   if (status && status !== "ALL") {
@@ -372,28 +347,39 @@ router.get("/history", async (req, res) => {
   }
 
   const searchFields = fields
-    ? String(fields).split(",")
+    ? String(fields)
+        .split(",")
+        .map((field) => field.trim())
+        .filter(Boolean)
     : ["orderId", "robotName", "pickup", "drop"];
 
   if (q && searchFields.length > 0) {
-    const query = String(q).toLowerCase();
+    const query = String(q).trim().toLowerCase();
 
     history = history.filter((item) => {
       return searchFields.some((field) => {
         if (field === "orderId") {
-          return item.orderId?.toLowerCase().includes(query);
+          return String(item.orderId || "")
+            .toLowerCase()
+            .includes(query);
         }
 
         if (field === "robotName") {
-          return item.robotName?.toLowerCase().includes(query);
+          return String(item.robotName || "")
+            .toLowerCase()
+            .includes(query);
         }
 
         if (field === "pickup") {
-          return item.pickup?.name?.toLowerCase().includes(query);
+          return String(item.pickup?.name || "")
+            .toLowerCase()
+            .includes(query);
         }
 
         if (field === "drop") {
-          return item.drop?.name?.toLowerCase().includes(query);
+          return String(item.drop?.name || "")
+            .toLowerCase()
+            .includes(query);
         }
 
         return false;
@@ -401,28 +387,55 @@ router.get("/history", async (req, res) => {
     });
   }
 
-  res.json(history);
+  history = [...history].sort((a, b) => {
+    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+  });
+
+  const totalItems = history.length;
+  const totalPages = Math.max(Math.ceil(totalItems / limit), 1);
+
+  const safePage = Math.min(page, totalPages);
+  const startIndex = (safePage - 1) * limit;
+  const endIndex = startIndex + limit;
+
+  const items = history.slice(startIndex, endIndex);
+
+  res.json({
+    items,
+    pagination: {
+      page: safePage,
+      limit,
+      totalItems,
+      totalPages,
+      hasNextPage: safePage < totalPages,
+      hasPreviousPage: safePage > 1,
+    },
+  });
 });
 
 router.post("/:orderId/cancel", async (req, res) => {
-  const { orderId } = req.params;
-  const history = await getHistory();
-
-  const index = history.findIndex((item) => item.orderId === orderId);
-  if (index === -1) {
-    return res.status(404).json({ error: "Order not found" });
+  try {
+    const result = await cancelQueuedOrder(req.params.orderId);
+    res.json(result);
+  } catch (err) {
+    res.status(err.statusCode || 500).json({
+      error: err.message || "Cancel order failed",
+      ...(err.payload || {}),
+    });
   }
+});
 
-  history[index] = {
-    ...history[index],
-    status: "CANCELLED",
-    finishedAt: new Date().toISOString(),
-    note: "Cancelled",
-  };
-
-  await saveHistory(history);
-
-  res.json({ ok: true });
+router.post("/:orderId/cancel-running", async (req, res) => {
+  try {
+    const { releaseOnly = false } = req.body || {};
+    const result = await cancelRunningOrder(req.params.orderId, releaseOnly);
+    res.json(result);
+  } catch (err) {
+    res.status(err.statusCode || 500).json({
+      error: err.message || "Cancel running failed",
+      ...(err.payload || {}),
+    });
+  }
 });
 
 module.exports = router;

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
+  Button,
   CircularProgress,
   FormControl,
   LinearProgress,
@@ -12,19 +13,31 @@ import SmartToyIcon from "@mui/icons-material/SmartToy";
 import BatteryChargingFullIcon from "@mui/icons-material/BatteryChargingFull";
 import BatteryFullIcon from "@mui/icons-material/BatteryFull";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import RouteIcon from "@mui/icons-material/Route";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WifiIcon from "@mui/icons-material/Wifi";
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { formatDateTime } from "../config/formatDatetime";
 
 import ScreenLayout from "../components/ScreenLayout.jsx";
-import { fetchConfig, fetchRobotStatus } from "../api/client.js";
+import {
+  cancelOrder,
+  cancelRunningOrder,
+  fetchConfig,
+  fetchRobotStatus,
+} from "../api/client.js";
 
 const STATUS_SELECTED_ROBOT_KEY = "statusSelectedRobotId";
+
+const AGV_STATUS_COLOR = {
+  OFFLINE: "#616161",
+  FREE: "#2e7d32",
+  ALARM: "#d32f2f",
+  INITIALIZING: "#fb8c00",
+  RUNNING: "#1976d2",
+  CHARGING: "#00897b",
+  UPGRADING: "#7b1fa2",
+};
 
 function InfoCard({
   icon,
@@ -84,8 +97,8 @@ function InfoCard({
 function StatusBadge({ status, error }) {
   const isError = Boolean(error);
   const text = isError ? "ERROR" : status || "ONLINE";
-  const color = isError ? "#d32f2f" : "#2e7d32";
-  const bg = isError ? "#ffebee" : "#e8f5e9";
+  const color = isError ? "#d32f2f" : AGV_STATUS_COLOR[status] || "#2e7d32";
+  const bg = isError ? "#ffebee" : `${color}18`;
 
   return (
     <Box
@@ -95,7 +108,7 @@ function StatusBadge({ status, error }) {
         gap: 1,
         px: 2,
         py: 0.7,
-        borderRadius: "999",
+        borderRadius: 999,
         bgcolor: bg,
         color,
         fontWeight: 900,
@@ -112,6 +125,25 @@ function StatusBadge({ status, error }) {
   );
 }
 
+function formatDelay(seconds) {
+  const safeSeconds = Math.max(Number(seconds) || 0, 0);
+  if (safeSeconds === 0) return "0 min";
+  const minutes = Math.floor(safeSeconds / 60);
+  const rest = safeSeconds % 60;
+  return `${minutes} min${rest ? ` ${rest} sec` : ""}`;
+}
+
+function formatRemaining(ms) {
+  const seconds = Math.ceil(Math.max(Number(ms) || 0, 0) / 1000);
+  return formatDelay(seconds);
+}
+
+function taskStatusColor(task) {
+  if (task.status === "DELAYING") return "#7b1fa2";
+  if (task.canCancelRunning) return "#1976d2";
+  return "#ed6c02";
+}
+
 function Status() {
   const navigate = useNavigate();
 
@@ -119,21 +151,7 @@ function Status() {
   const [robotId, setRobotId] = useState("");
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const AGV_STATUS_COLOR = {
-    OFFLINE: "#616161", // เทา
-    FREE: "#2e7d32", // เขียว
-    ALARM: "#d32f2f", // แดง
-    INITIALIZING: "#fb8c00", // ส้ม
-    RUNNING: "#1976d2", // น้ำเงิน
-    CHARGING: "#00897b", // เขียวอมฟ้า
-    UPGRADING: "#7b1fa2", // ม่วง
-  };
-
-  const CHARGING_COLOR = {
-    CHARGING: "#2e7d32",
-    "NOT CHARGING": "#111827",
-  };
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     fetchConfig().then((data) => {
@@ -152,6 +170,12 @@ function Status() {
     });
   }, []);
 
+  const reloadStatus = async () => {
+    if (!robotId) return;
+    const data = await fetchRobotStatus(robotId);
+    setStatus(data);
+  };
+
   useEffect(() => {
     if (!robotId) return;
 
@@ -165,7 +189,6 @@ function Status() {
     if (!robotId || !config) return;
 
     const intervalMs = config.statusRefreshIntervalMs ?? 5000;
-
     const timer = setInterval(() => {
       fetchRobotStatus(robotId)
         .then((data) => setStatus(data))
@@ -180,29 +203,89 @@ function Status() {
   }, [config, robotId]);
 
   const deviceStatus = status?.deviceStatus || {};
-  const latestOrder = status?.latestOrder || null;
-
+  const tasks = status?.tasks || [];
   const battery = Number(deviceStatus?.battery ?? 0);
   const safeBattery = Number.isFinite(battery)
     ? Math.max(0, Math.min(100, battery))
     : 0;
-
   const agvStatus = deviceStatus?.agvStatus || deviceStatus?.state || "-";
-  const position = deviceStatus?.devicePosition || "-";
-  const charging = deviceStatus?.charging ? "CHARGING" : "NOT CHARGING";
-
   const agvStatusColor = AGV_STATUS_COLOR[agvStatus] || "#111827";
+  const charging = deviceStatus?.charging ? "CHARGING" : "NOT CHARGING";
+  const assignUrl = selectedRobot
+    ? `/pickup-select?robotId=${encodeURIComponent(
+        selectedRobot.id,
+      )}&robotName=${encodeURIComponent(selectedRobot.name || "")}`
+    : "/select-robot";
 
-  const chargingColor = CHARGING_COLOR[charging] || "#111827";
+  const handleCancel = async (task) => {
+    const result = await Swal.fire({
+      title: "Cancel Order?",
+      text: `Cancel order ${task.orderId}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Cancel Order",
+      cancelButtonText: "Back",
+      confirmButtonColor: "#d32f2f",
+      reverseButtons: true,
+    });
 
-  const orderStatus = latestOrder?.status || "-";
+    if (!result.isConfirmed) return;
 
-  const orderStatusColor =
-    orderStatus === "SUCCESS"
-      ? "#2e7d32"
-      : orderStatus === "FAILED"
-        ? "#d32f2f"
-        : "#111827";
+    try {
+      setActionLoading(true);
+      await cancelOrder(task.orderId);
+      await reloadStatus();
+      await Swal.fire({
+        icon: "success",
+        title: "Cancelled",
+        timer: 1000,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Cancel failed",
+        text: err?.message || "Cancel order failed",
+      });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleCancelRunning = async (task) => {
+    const result = await Swal.fire({
+      title: "Cancel Running?",
+      text: `Cancel running order ${task.orderId} in RCS?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Cancel in RCS",
+      cancelButtonText: "Back",
+      confirmButtonColor: "#d32f2f",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      setActionLoading(true);
+      await cancelRunningOrder(task.orderId, false);
+      await reloadStatus();
+      await Swal.fire({
+        icon: "success",
+        title: "Cancelled",
+        timer: 1000,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Cancel failed",
+        text: err?.message || "Cancel running failed",
+      });
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   return (
     <ScreenLayout
@@ -212,14 +295,7 @@ function Status() {
       contentMaxWidth={1180}
       headerMaxWidth={1180}
     >
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: 1180,
-          mx: "auto",
-          p: { xs: 0.5, md: 1 },
-        }}
-      >
+      <Box sx={{ width: "100%", maxWidth: 1180, mx: "auto", p: { xs: 0.5, md: 1 } }}>
         <Typography
           sx={{
             width: "100%",
@@ -246,9 +322,9 @@ function Status() {
             <FormControl fullWidth sx={{ mb: 1.5 }}>
               <Select
                 value={robotId}
-                onChange={(e) => {
-                  setRobotId(e.target.value);
-                  localStorage.setItem(STATUS_SELECTED_ROBOT_KEY, e.target.value);
+                onChange={(event) => {
+                  setRobotId(event.target.value);
+                  localStorage.setItem(STATUS_SELECTED_ROBOT_KEY, event.target.value);
                 }}
                 sx={{
                   bgcolor: "#fff",
@@ -310,11 +386,7 @@ function Status() {
                           component="img"
                           src={selectedRobot.imageUrl}
                           alt={selectedRobot.name}
-                          sx={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "contain",
-                          }}
+                          sx={{ width: "100%", height: "100%", objectFit: "contain" }}
                         />
                       ) : (
                         <SmartToyIcon sx={{ fontSize: 90, color: "#2d49ae" }} />
@@ -332,158 +404,125 @@ function Status() {
                     </Typography>
 
                     <Box sx={{ mt: 1.5 }}>
-                      <StatusBadge
-                        status={agvStatus}
-                        error={deviceStatus?.error}
-                      />
+                      <StatusBadge status={agvStatus} error={deviceStatus?.error} />
                     </Box>
                   </Box>
 
-                  <Box>
-                    {deviceStatus?.error ? (
+                  {deviceStatus?.error ? (
+                    <Box
+                      sx={{
+                        bgcolor: "#fff",
+                        borderRadius: "4px",
+                        p: 3,
+                        boxShadow: "0 10px 30px rgba(0,0,0,0.10)",
+                        border: "1px solid #ffcdd2",
+                      }}
+                    >
+                      <Typography sx={{ color: "#d32f2f", fontSize: 22, fontWeight: 900, mb: 1 }}>
+                        RCS ERROR
+                      </Typography>
+                      <Typography sx={{ color: "#d32f2f", fontWeight: 700 }}>
+                        {deviceStatus.error}
+                      </Typography>
+                      {deviceStatus?.url && (
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ display: "block", mt: 2, wordBreak: "break-all" }}
+                        >
+                          URL: {deviceStatus.url}
+                        </Typography>
+                      )}
+                    </Box>
+                  ) : (
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+                        gap: 1,
+                      }}
+                    >
+                      <InfoCard
+                        icon={<WifiIcon />}
+                        title="STATUS"
+                        value={agvStatus}
+                        color={agvStatusColor}
+                        valueColor={agvStatusColor}
+                      />
+                      <InfoCard
+                        icon={<LocationOnIcon />}
+                        title="POSITION"
+                        value={deviceStatus?.devicePosition || "-"}
+                        color="#ed6c02"
+                      />
                       <Box
                         sx={{
                           bgcolor: "#fff",
                           borderRadius: "4px",
-                          p: 3,
-                          boxShadow: "0 10px 30px rgba(0,0,0,0.10)",
-                          border: "1px solid #ffcdd2",
+                          p: 1.2,
+                          minHeight: 78,
+                          boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+                          border: "1px solid #eef0f5",
                         }}
                       >
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                          <Box
+                            sx={{
+                              width: 26,
+                              height: 26,
+                              "& svg": { fontSize: 17 },
+                              borderRadius: "50%",
+                              bgcolor: "#2d49ae18",
+                              color: "#2d49ae",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <BatteryFullIcon />
+                          </Box>
+                          <Typography sx={{ fontWeight: 900, color: "#667085" }}>
+                            BATTERY
+                          </Typography>
+                        </Box>
                         <Typography
                           sx={{
-                            color: "#d32f2f",
-                            fontSize: 22,
+                            fontSize: { xs: 16, md: 18 },
                             fontWeight: 900,
+                            color: "#111827",
                             mb: 1,
                           }}
                         >
-                          RCS ERROR
+                          {deviceStatus?.battery ?? "-"}%
                         </Typography>
-
-                        <Typography sx={{ color: "#d32f2f", fontWeight: 700 }}>
-                          {deviceStatus.error}
-                        </Typography>
-
-                        {deviceStatus?.url && (
-                          <Typography
-                            variant="caption"
-                            color="text.secondary"
-                            sx={{
-                              display: "block",
-                              mt: 2,
-                              wordBreak: "break-all",
-                            }}
-                          >
-                            URL: {deviceStatus.url}
-                          </Typography>
-                        )}
-                      </Box>
-                    ) : (
-                      <Box
-                        sx={{
-                          display: "grid",
-                          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-                          gap: 1,
-                        }}
-                      >
-                        <InfoCard
-                          icon={<WifiIcon />}
-                          title="STATUS"
-                          value={agvStatus}
-                          color={agvStatusColor}
-                          valueColor={agvStatusColor}
-                        />
-
-                        <InfoCard
-                          icon={<LocationOnIcon />}
-                          title="POSITION"
-                          value={position}
-                          color="#ed6c02"
-                        />
-
-                        <Box
+                        <LinearProgress
+                          variant="determinate"
+                          value={safeBattery}
                           sx={{
-                            bgcolor: "#fff",
-                            borderRadius: "4px",
-                            p: 1.2,
-                            minHeight: 78,
-                            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-                            border: "1px solid #eef0f5",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                              mb: 1,
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                width: 26,
-                                height: 26,
-                                "& svg": { fontSize: 17 },
-                                borderRadius: "50%",
-                                bgcolor: "#2d49ae18",
-                                color: "#2d49ae",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <BatteryFullIcon />
-                            </Box>
-
-                            <Typography
-                              sx={{ fontWeight: 900, color: "#667085" }}
-                            >
-                              BATTERY
-                            </Typography>
-                          </Box>
-
-                          <Typography
-                            sx={{
-                              fontSize: { xs: 16, md: 18 },
-                              fontWeight: 900,
-                              color: "#111827",
-                              mb: 1,
-                            }}
-                          >
-                            {deviceStatus?.battery ?? "-"}%
-                          </Typography>
-
-                          <LinearProgress
-                            variant="determinate"
-                            value={safeBattery}
-                            sx={{
-                              height: 7,
+                            height: 7,
+                            borderRadius: 99,
+                            bgcolor: "#e5e7eb",
+                            "& .MuiLinearProgress-bar": {
                               borderRadius: 99,
-                              bgcolor: "#e5e7eb",
-                              "& .MuiLinearProgress-bar": {
-                                borderRadius: 99,
-                                bgcolor:
-                                  safeBattery <= 20
-                                    ? "#d32f2f"
-                                    : safeBattery <= 50
-                                      ? "#ed6c02"
-                                      : "#2e7d32",
-                              },
-                            }}
-                          />
-                        </Box>
-
-                        <InfoCard
-                          icon={<BatteryChargingFullIcon />}
-                          title="CHARGING"
-                          value={charging}
-                          color={chargingColor}
-                          valueColor={chargingColor}
+                              bgcolor:
+                                safeBattery <= 20
+                                  ? "#d32f2f"
+                                  : safeBattery <= 50
+                                    ? "#ed6c02"
+                                    : "#2e7d32",
+                            },
+                          }}
                         />
                       </Box>
-                    )}
-                  </Box>
+                      <InfoCard
+                        icon={<BatteryChargingFullIcon />}
+                        title="CHARGING"
+                        value={charging}
+                        color={charging === "CHARGING" ? "#2e7d32" : "#111827"}
+                        valueColor={charging === "CHARGING" ? "#2e7d32" : "#111827"}
+                      />
+                    </Box>
+                  )}
                 </Box>
 
                 <Box
@@ -495,14 +534,7 @@ function Status() {
                     border: "1px solid #eef0f5",
                   }}
                 >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1,
-                      mb: 1,
-                    }}
-                  >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
                     <AssignmentIcon sx={{ color: "#2d49ae" }} />
                     <Typography
                       sx={{
@@ -511,52 +543,89 @@ function Status() {
                         fontSize: { xs: 14, md: 16 },
                       }}
                     >
-                      LAST ORDER
+                      ORDER QUEUE
                     </Typography>
                   </Box>
 
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: {
-                        xs: "1fr",
-                        md: "1fr 1.4fr 1fr 1fr",
-                      },
-                      gap: 1,
-                    }}
-                  >
-                    <InfoCard
-                      icon={<AssignmentIcon />}
-                      title="ORDER ID"
-                      value={latestOrder?.orderId || "-"}
-                      color="#2d49ae"
-                    />
-
-                    <InfoCard
-                      icon={<RouteIcon />}
-                      title="PICKUP → DROP"
-                      value={`${latestOrder?.pickup?.name || "-"} → ${
-                        latestOrder?.drop?.name || "-"
-                      }`}
-                      color="#7b1fa2"
-                    />
-
-                    <InfoCard
-                      icon={<AccessTimeIcon />}
-                      title="START"
-                      value={formatDateTime(latestOrder?.startedAt) || "-"}
-                      color="#0288d1"
-                    />
-
-                    <InfoCard
-                      icon={<TaskAltIcon />}
-                      title="ORDER STATUS"
-                      value={orderStatus}
-                      valueColor={orderStatusColor}
-                      color={orderStatusColor}
-                    />
-                  </Box>
+                  {tasks.length === 0 ? (
+                    <Typography sx={{ color: "#667085", fontWeight: 800 }}>
+                      Not works.
+                    </Typography>
+                  ) : (
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                      {tasks.map((task, index) => (
+                        <Box
+                          key={task.orderId}
+                          sx={{
+                            display: "grid",
+                            gridTemplateColumns: {
+                              xs: "1fr",
+                              md: "52px 1.3fr 1fr 120px 130px 100px",
+                            },
+                            gap: 1,
+                            alignItems: "center",
+                            border: "1px solid #eef0f5",
+                            borderRadius: "4px",
+                            p: 1,
+                            bgcolor: "#fbfcff",
+                          }}
+                        >
+                          <Typography sx={{ fontWeight: 900 }}>#{index + 1}</Typography>
+                          <Typography sx={{ fontWeight: 800 }}>
+                            {task.pickup?.name || "-"} → {task.drop?.name || "-"}
+                          </Typography>
+                          <Typography sx={{ color: "#667085", fontSize: 12 }}>
+                            {task.orderId}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              color: taskStatusColor(task),
+                              fontWeight: 900,
+                            }}
+                          >
+                            {task.status}
+                          </Typography>
+                          <Typography sx={{ fontWeight: 800 }}>
+                            Delay:{" "}
+                            {task.status === "DELAYING"
+                              ? formatRemaining(task.remainingDelayMs)
+                              : formatDelay(task.delaySeconds)}
+                          </Typography>
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            disabled={actionLoading}
+                            onClick={() =>
+                              task.canCancelRunning
+                                ? handleCancelRunning(task)
+                                : handleCancel(task)
+                            }
+                            sx={{ borderRadius: "4px", fontWeight: 900 }}
+                          >
+                            Cancel
+                          </Button>
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
                 </Box>
+
+                <Button
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  disabled={!selectedRobot}
+                  onClick={() => navigate(assignUrl)}
+                  sx={{
+                    mt: 1.5,
+                    borderRadius: "4px",
+                    fontWeight: 900,
+                    fontSize: { xs: 16, md: 18 },
+                    py: 1.3,
+                  }}
+                >
+                  Assign
+                </Button>
               </>
             )}
           </>

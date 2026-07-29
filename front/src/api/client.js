@@ -108,6 +108,13 @@ export function cancelOrder(orderId) {
   return apiRequest(`/orders/${orderId}/cancel`, { method: "POST" });
 }
 
+export function cancelRunningOrder(orderId, releaseOnly = false) {
+  return apiRequest(`/orders/${orderId}/cancel-running`, {
+    method: "POST",
+    body: JSON.stringify({ releaseOnly }),
+  });
+}
+
 export function fetchRobotStatus(robotId) {
   return apiRequest(`/status/${robotId}`);
 }

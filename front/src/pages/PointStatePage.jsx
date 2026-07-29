@@ -103,7 +103,9 @@ function PointStatePage() {
   }, [robotId]);
 
   const robot = useMemo(() => {
-    return (config?.robots || []).find((item) => String(item.id) === String(robotId));
+    return (config?.robots || []).find(
+      (item) => String(item.id) === String(robotId),
+    );
   }, [config, robotId]);
 
   const updateSpotName = (index, name) => {
@@ -134,7 +136,9 @@ function PointStatePage() {
   };
 
   const deleteSpot = (index) => {
-    setSpots((current) => current.filter((_, itemIndex) => itemIndex !== index));
+    setSpots((current) =>
+      current.filter((_, itemIndex) => itemIndex !== index),
+    );
   };
 
   const handleSave = async () => {
@@ -214,21 +218,24 @@ function PointStatePage() {
                   sx={{ width: "100%", height: 80, objectFit: "contain" }}
                 />
               ) : (
-                <Typography sx={{ color: "#2d49ae", fontSize: 24, fontWeight: 900 }}>
+                <Typography
+                  sx={{ color: "#2d49ae", fontSize: 24, fontWeight: 900 }}
+                >
                   {(robotName || "?").slice(0, 2).toUpperCase()}
                 </Typography>
               )}
             </Box>
 
             <Box>
-              <Typography sx={{ color: "#2d49ae", fontSize: 24, fontWeight: 900 }}>
-                POINT STATE
+              <Typography
+                sx={{ color: "#2d49ae", fontSize: 24, fontWeight: 900 }}
+              >
+                ROUTE POINTS
               </Typography>
-              <Typography sx={{ color: "#101828", fontSize: 18, fontWeight: 900 }}>
+              <Typography
+                sx={{ color: "#101828", fontSize: 18, fontWeight: 900 }}
+              >
                 {robotName || "-"}
-              </Typography>
-              <Typography sx={{ color: "#667085", fontSize: 13, fontWeight: 800 }}>
-                Robot ID: {robotId || "-"}
               </Typography>
             </Box>
 
@@ -277,8 +284,10 @@ function PointStatePage() {
                 mb: 2,
               }}
             >
-              <Typography sx={{ color: "#1c2755", fontSize: 16, fontWeight: 900 }}>
-                SPOTS
+              <Typography
+                sx={{ color: "#1c2755", fontSize: 16, fontWeight: 900 }}
+              >
+                NODE NAMES
               </Typography>
               <Button
                 variant="outlined"
@@ -311,32 +320,26 @@ function PointStatePage() {
                     key={spot.rowKey || index}
                     sx={{
                       display: "grid",
-                      gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr 44px" },
+                      gridTemplateColumns: {
+                        xs: "32px 1fr 44px",
+                        md: "33px minmax(0, 1fr) 44px",
+                      },
                       gap: 1,
                       alignItems: "center",
-                      p: 1,
+                      p: 1.5,
                       border: "1px solid #e8edf7",
                       borderRadius: "4px",
                       bgcolor: "#fbfcff",
                     }}
                   >
+                    {index + 1}.{" "}
                     <TextField
                       size="small"
-                      label="name"
+                      label="Node Name"
                       value={spot.name || ""}
-                      onChange={(event) => updateSpotName(index, event.target.value)}
-                    />
-                    <TextField
-                      size="small"
-                      label="id"
-                      value={spot.id || makeSpotId(spot.name, spot.id)}
-                      disabled
-                    />
-                    <TextField
-                      size="small"
-                      label="rcsPosition"
-                      value={spot.name || ""}
-                      disabled
+                      onChange={(event) =>
+                        updateSpotName(index, event.target.value)
+                      }
                     />
                     <Tooltip title="Delete point">
                       <IconButton

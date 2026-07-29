@@ -1,6 +1,7 @@
 const express = require("express");
 const { getConfig, getHistory } = require("../services/store");
 const { getDeviceStatusFromAllAreas } = require("../services/rcs");
+const { processRobotQueue } = require("../services/queue");
 
 const router = express.Router();
 
@@ -15,6 +16,15 @@ const AGV_STATUS_MAP = {
   7: "UPGRADING"
 };
 
+const ACTIVE_ORDER_STATUSES = new Set([
+  "QUEUED",
+  "DELAYING",
+  "SENDING",
+  "RUNNING",
+  "ISSUED",
+  "WAIT_CONFIRMATION",
+]);
+
 router.get("/:robotId", async (req, res) => {
   const { robotId } = req.params;
   const config = await getConfig();
@@ -22,6 +32,10 @@ router.get("/:robotId", async (req, res) => {
   if (!robot) {
     return res.status(404).json({ error: "Robot not found" });
   }
+
+  processRobotQueue(robotId).catch((err) => {
+    console.error("[Status] queue resume error:", err);
+  });
   const rcs = (config.rcs || []).find((item) => item.id === robot.rcsId);
   if (!rcs) {
     return res.status(404).json({ error: "RCS not found" });
@@ -60,6 +74,51 @@ router.get("/:robotId", async (req, res) => {
 
   const history = await getHistory();
   const latest = history.find((item) => item.robotId === robotId) || null;
+  const now = Date.now();
+  const tasks = history
+    .filter(
+      (item) =>
+        String(item.robotId) === String(robotId) &&
+        ACTIVE_ORDER_STATUSES.has(item.status),
+    )
+    .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0))
+    .map((item) => {
+      const remainingDelayMs =
+        item.status === "DELAYING" && item.delayUntil
+          ? Math.max(new Date(item.delayUntil).getTime() - now, 0)
+          : 0;
+
+      return {
+        orderId: item.orderId,
+        robotId: item.robotId,
+        robotName: item.robotName,
+        pickup: item.pickup,
+        drop: item.drop,
+        status: item.status,
+        statusWork:
+          item.status === "RUNNING" ||
+          item.status === "SENDING" ||
+          item.status === "ISSUED" ||
+          item.status === "WAIT_CONFIRMATION"
+            ? "delivering"
+            : item.status === "DELAYING"
+              ? "delay"
+              : "queue",
+        delaySeconds: Number(item.delaySeconds) || 0,
+        delayStartedAt: item.delayStartedAt || null,
+        delayUntil: item.delayUntil || null,
+        remainingDelayMs,
+        canCancel: item.status === "QUEUED" || item.status === "DELAYING",
+        canCancelRunning:
+          item.status === "RUNNING" ||
+          item.status === "SENDING" ||
+          item.status === "ISSUED" ||
+          item.status === "WAIT_CONFIRMATION",
+        createdAt: item.createdAt,
+        startedAt: item.startedAt,
+        sentAt: item.sentAt,
+      };
+    });
 
   res.json({
     robot: {
@@ -68,7 +127,8 @@ router.get("/:robotId", async (req, res) => {
       deviceNum: robot.deviceNum
     },
     deviceStatus,
-    latestOrder: latest
+    latestOrder: latest,
+    tasks,
   });
 });
 

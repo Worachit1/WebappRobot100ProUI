@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Box,
@@ -15,17 +15,13 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
-import LoginIcon from "@mui/icons-material/Login";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 import { useNavigate } from "react-router-dom";
 
 import ScreenLayout from "../components/ScreenLayout.jsx";
-import { fetchConfig, login, updateConfig } from "../api/client.js";
-
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "admin123";
+import { fetchConfig, updateConfig } from "../api/client.js";
 
 function getPrimaryBaseUrl(config) {
   return config?.rcs?.[0]?.baseUrl || "";
@@ -35,127 +31,82 @@ function robotInitials(name) {
   return (name || "?").slice(0, 2).toUpperCase();
 }
 
-function AdminLogin({ onSuccess }) {
-  const [username, setUsername] = useState(ADMIN_USERNAME);
-  const [password, setPassword] = useState(ADMIN_PASSWORD);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+function makeRowKey() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      const res = await login(username, password);
-      localStorage.setItem("authUser", res.username);
-      localStorage.setItem("adminAuth", "true");
-      onSuccess();
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+function modelProcessToRows(modelProcessCode = {}) {
+  return Object.entries(modelProcessCode).map(([type, code]) => ({
+    rowKey: makeRowKey(),
+    type,
+    code,
+  }));
+}
+
+function rowsToModelProcess(rows) {
+  return rows.reduce((result, row) => {
+    const type = row.type.trim();
+    if (type) {
+      result[type] = row.code;
     }
-  };
-
-  return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%", maxWidth: 420 }}>
-      <Paper
-        elevation={0}
-        sx={{
-          border: "1px solid #d8deef",
-          borderRadius: "4px",
-          p: 3,
-        }}
-      >
-        <Typography sx={{ color: "#2d49ae", fontSize: 24, fontWeight: 900, mb: 2 }}>
-          ADMIN LOGIN
-        </Typography>
-        <TextField
-          fullWidth
-          label="Username"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          margin="normal"
-        />
-        <TextField
-          fullWidth
-          label="Password"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          margin="normal"
-        />
-        {error && (
-          <Alert severity="error" sx={{ mt: 2 }}>
-            {error}
-          </Alert>
-        )}
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          startIcon={<LoginIcon />}
-          disabled={loading}
-          sx={{ mt: 2, borderRadius: "4px", fontWeight: 900 }}
-        >
-          Login
-        </Button>
-      </Paper>
-    </Box>
-  );
+    return result;
+  }, {});
 }
 
 function ModelProcessEditor({ robot, onChange }) {
-  const entries = useMemo(
-    () => Object.entries(robot.modelProcessCode || {}),
-    [robot.modelProcessCode],
+  const [rows, setRows] = useState(() =>
+    modelProcessToRows(robot.modelProcessCode),
   );
 
-  const updateKey = (oldKey, nextKey) => {
-    const cleanKey = nextKey.trim();
-    const next = { ...(robot.modelProcessCode || {}) };
-    const value = next[oldKey] || "";
-    delete next[oldKey];
-    if (cleanKey) next[cleanKey] = value;
-    onChange({ ...robot, modelProcessCode: next });
+  const commitRows = (nextRows) => {
+    setRows(nextRows);
+    onChange({ ...robot, modelProcessCode: rowsToModelProcess(nextRows) });
   };
 
-  const updateValue = (key, value) => {
-    onChange({
-      ...robot,
-      modelProcessCode: {
-        ...(robot.modelProcessCode || {}),
-        [key]: value,
-      },
-    });
+  const updateType = (rowKey, type) => {
+    commitRows(
+      rows.map((row) => (row.rowKey === rowKey ? { ...row, type } : row)),
+    );
+  };
+
+  const updateValue = (rowKey, code) => {
+    commitRows(
+      rows.map((row) => (row.rowKey === rowKey ? { ...row, code } : row)),
+    );
   };
 
   const addProcess = () => {
-    const current = robot.modelProcessCode || {};
-    let index = entries.length + 1;
+    const current = rowsToModelProcess(rows);
+    let index = rows.length + 1;
     let key = `process${index}`;
     while (Object.prototype.hasOwnProperty.call(current, key)) {
       index += 1;
       key = `process${index}`;
     }
-    onChange({
-      ...robot,
-      modelProcessCode: {
-        ...current,
-        [key]: "",
+
+    commitRows([
+      ...rows,
+      {
+        rowKey: makeRowKey(),
+        type: key,
+        code: "",
       },
-    });
+    ]);
   };
 
-  const removeProcess = (key) => {
-    const next = { ...(robot.modelProcessCode || {}) };
-    delete next[key];
-    onChange({ ...robot, modelProcessCode: next });
+  const removeProcess = (rowKey) => {
+    commitRows(rows.filter((row) => row.rowKey !== rowKey));
   };
 
   return (
     <Stack spacing={1.5}>
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <Typography sx={{ color: "#1c2755", fontSize: 15, fontWeight: 900 }}>
           modelProcessCode
         </Typography>
@@ -174,12 +125,14 @@ function ModelProcessEditor({ robot, onChange }) {
         </Tooltip>
       </Box>
 
-      {entries.length === 0 ? (
-        <Typography sx={{ color: "#667085", fontSize: 14 }}>No model process code</Typography>
+      {rows.length === 0 ? (
+        <Typography sx={{ color: "#667085", fontSize: 14 }}>
+          No model process code
+        </Typography>
       ) : (
-        entries.map(([type, code]) => (
+        rows.map((row) => (
           <Box
-            key={type}
+            key={row.rowKey}
             sx={{
               display: "grid",
               gridTemplateColumns: { xs: "1fr", md: "180px 1fr 44px" },
@@ -194,19 +147,19 @@ function ModelProcessEditor({ robot, onChange }) {
             <TextField
               size="small"
               label="Type"
-              value={type}
-              onChange={(event) => updateKey(type, event.target.value)}
+              value={row.type}
+              onChange={(event) => updateType(row.rowKey, event.target.value)}
             />
             <TextField
               size="small"
               label="Task"
-              value={code}
-              onChange={(event) => updateValue(type, event.target.value)}
+              value={row.code}
+              onChange={(event) => updateValue(row.rowKey, event.target.value)}
             />
             <Tooltip title="Delete model process">
               <IconButton
                 color="error"
-                onClick={() => removeProcess(type)}
+                onClick={() => removeProcess(row.rowKey)}
                 sx={{
                   width: 40,
                   height: 40,
@@ -225,22 +178,27 @@ function ModelProcessEditor({ robot, onChange }) {
 
 function AdminPage() {
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(localStorage.getItem("adminAuth") === "true");
   const [config, setConfig] = useState(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  const robotScrollRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartX = useRef(0);
+  const dragStartScrollLeft = useRef(0);
+  const animationFrameRef = useRef(null);
+
   useEffect(() => {
-    if (!isAdmin) return;
     setLoading(true);
     setError("");
+
     fetchConfig()
       .then((data) => setConfig(data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [isAdmin]);
+  }, []);
 
   const updateRobot = (robotId, nextRobot) => {
     setConfig((current) => ({
@@ -268,7 +226,14 @@ function AdminPage() {
           ? current.rcs.map((item, index) =>
               index === 0 ? { ...item, baseUrl: value } : item,
             )
-          : [{ id: "rcs-1", name: "RCS-1", baseUrl: value, areaIds: [] }],
+          : [
+              {
+                id: "rcs-1",
+                name: "RCS-1",
+                baseUrl: value,
+                areaIds: [],
+              },
+            ],
     }));
   };
 
@@ -276,6 +241,7 @@ function AdminPage() {
     setSaving(true);
     setError("");
     setMessage("");
+
     try {
       await updateConfig(config);
       setMessage("Saved successfully");
@@ -286,6 +252,42 @@ function AdminPage() {
     }
   };
 
+  const handleMouseDown = (event) => {
+    const container = robotScrollRef.current;
+    if (!container) return;
+
+    setIsDragging(true);
+    dragStartX.current = event.pageX;
+    dragStartScrollLeft.current = container.scrollLeft;
+  };
+
+  const handleMouseMove = (event) => {
+    if (!isDragging) return;
+
+    const container = robotScrollRef.current;
+    if (!container) return;
+
+    event.preventDefault();
+
+    const distance = event.pageX - dragStartX.current;
+
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+
+    animationFrameRef.current = requestAnimationFrame(() => {
+      container.scrollLeft = dragStartScrollLeft.current - distance;
+    });
+  };
+
+  const stopDragging = () => {
+    setIsDragging(false);
+
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+  };
   return (
     <ScreenLayout
       title="Admin"
@@ -294,9 +296,7 @@ function AdminPage() {
       contentMaxWidth={1180}
       headerMaxWidth={1180}
     >
-      {!isAdmin ? (
-        <AdminLogin onSuccess={() => setIsAdmin(true)} />
-      ) : loading ? (
+      {loading ? (
         <CircularProgress />
       ) : (
         <Box sx={{ width: "100%" }}>
@@ -310,17 +310,27 @@ function AdminPage() {
               mb: 2,
             }}
           >
-            <Typography sx={{ color: "#2d49ae", fontSize: 24, fontWeight: 900 }}>
-              ROBOT ADMIN
+            <Typography
+              sx={{
+                color: "#2d49ae",
+                fontSize: 24,
+                fontWeight: 900,
+              }}
+            >
+              ROBOT SETTINGS
             </Typography>
+
             <Button
               variant="contained"
               startIcon={<SaveIcon />}
               disabled={saving || !config}
               onClick={handleSave}
-              sx={{ borderRadius: "4px", fontWeight: 900 }}
+              sx={{
+                borderRadius: "4px",
+                fontWeight: 900,
+              }}
             >
-              Save
+              {saving ? "Saving..." : "Save"}
             </Button>
           </Box>
 
@@ -329,6 +339,7 @@ function AdminPage() {
               {message}
             </Alert>
           )}
+
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
               {error}
@@ -345,9 +356,17 @@ function AdminPage() {
               bgcolor: "#f8fbff",
             }}
           >
-            <Typography sx={{ color: "#1c2755", fontSize: 15, fontWeight: 900, mb: 1.5 }}>
+            <Typography
+              sx={{
+                color: "#1c2755",
+                fontSize: 15,
+                fontWeight: 900,
+                mb: 1.5,
+              }}
+            >
               MAIN RCS BASE URL
             </Typography>
+
             <TextField
               fullWidth
               label="baseUrl"
@@ -356,12 +375,39 @@ function AdminPage() {
             />
           </Paper>
 
-          <Stack spacing={2}>
+          <Box
+            ref={robotScrollRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={stopDragging}
+            onMouseLeave={stopDragging}
+            sx={{
+              width: "100%",
+              display: "flex",
+              gap: 2,
+              overflowX: "auto",
+              overflowY: "hidden",
+              pb: 2,
+              cursor: isDragging ? "grabbing" : "grab",
+              userSelect: isDragging ? "none" : "auto",
+              scrollBehavior: "smooth",
+              scrollSnapType: "x mandatory",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
             {(config?.robots || []).map((robot) => (
               <Paper
                 key={robot.id}
                 elevation={0}
                 sx={{
+                  flex: "0 0 auto",
+                  width: {
+                    xs: "calc(100vw - 64px)",
+                    sm: 520,
+                    md: 560,
+                  },
+                  maxWidth: "90vw",
+                  scrollSnapAlign: "start",
                   border: "1px solid #d8deef",
                   borderRadius: "4px",
                   p: { xs: 2, md: 2.5 },
@@ -372,7 +418,10 @@ function AdminPage() {
                 <Box
                   sx={{
                     display: "grid",
-                    gridTemplateColumns: { xs: "1fr", md: "140px 1fr" },
+                    gridTemplateColumns: {
+                      xs: "1fr",
+                      md: "140px 1fr",
+                    },
                     gap: 2,
                     alignItems: "stretch",
                   }}
@@ -395,15 +444,23 @@ function AdminPage() {
                         component="img"
                         src={robot.imageUrl}
                         alt={robot.name || "robot"}
+                        draggable={false}
                         sx={{
                           width: "100%",
                           height: 108,
                           objectFit: "contain",
                           display: "block",
+                          pointerEvents: "none",
                         }}
                       />
                     ) : (
-                      <Typography sx={{ color: "#2d49ae", fontSize: 26, fontWeight: 900 }}>
+                      <Typography
+                        sx={{
+                          color: "#2d49ae",
+                          fontSize: 26,
+                          fontWeight: 900,
+                        }}
+                      >
                         {robotInitials(robot.name)}
                       </Typography>
                     )}
@@ -412,7 +469,10 @@ function AdminPage() {
                   <Box
                     sx={{
                       display: "grid",
-                      gridTemplateColumns: { xs: "1fr", md: "1fr 220px 190px" },
+                      gridTemplateColumns: {
+                        xs: "1fr",
+                        md: "1fr",
+                      },
                       gap: 2,
                       alignContent: "center",
                       alignItems: "center",
@@ -422,9 +482,6 @@ function AdminPage() {
                       sx={{
                         borderLeft: "4px solid #2d49ae",
                         pl: 1.5,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
                         minWidth: 0,
                       }}
                     >
@@ -439,31 +496,26 @@ function AdminPage() {
                       >
                         {robot.name || "-"}
                       </Typography>
-                      <Typography
-                        sx={{
-                          color: "#667085",
-                          fontSize: 13,
-                          fontWeight: 800,
-                          mt: 0.5,
-                        }}
-                      >
-                        ID: {robot.id || "-"}
-                      </Typography>
                     </Box>
 
                     <TextField
                       size="small"
-                      label="deviceNum"
+                      label="Device Number"
                       value={robot.deviceNum || ""}
+                      onMouseDown={(event) => event.stopPropagation()}
                       onChange={(event) =>
-                        updateRobotField(robot.id, "deviceNum", event.target.value)
+                        updateRobotField(
+                          robot.id,
+                          "deviceNum",
+                          event.target.value,
+                        )
                       }
-                      sx={{ alignSelf: "center" }}
                     />
 
                     <Button
                       variant="outlined"
                       startIcon={<LocationOnIcon />}
+                      onMouseDown={(event) => event.stopPropagation()}
                       onClick={() =>
                         navigate(
                           `/admin/point-state?robotId=${encodeURIComponent(
@@ -478,20 +530,22 @@ function AdminPage() {
                         whiteSpace: "nowrap",
                       }}
                     >
-                      Detail Point State
+                      Route Points
                     </Button>
                   </Box>
                 </Box>
 
                 <Divider sx={{ my: 2 }} />
 
-                <ModelProcessEditor
-                  robot={robot}
-                  onChange={(nextRobot) => updateRobot(robot.id, nextRobot)}
-                />
+                <Box onMouseDown={(event) => event.stopPropagation()}>
+                  <ModelProcessEditor
+                    robot={robot}
+                    onChange={(nextRobot) => updateRobot(robot.id, nextRobot)}
+                  />
+                </Box>
               </Paper>
             ))}
-          </Stack>
+          </Box>
         </Box>
       )}
     </ScreenLayout>

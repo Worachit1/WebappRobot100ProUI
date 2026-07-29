@@ -1,5 +1,1074 @@
 [
   {
+    "orderId": "1785295197404841042",
+    "robotId": "fp150",
+    "robotName": "FP150",
+    "modelProcessType": "delivery",
+    "modelProcessCode": "FP150Task",
+    "pickup": {
+      "id": "s-c2-f2",
+      "name": "C2-F2",
+      "rcsPosition": "C2-F2"
+    },
+    "drop": {
+      "id": "s-c2-f3",
+      "name": "C2-F3",
+      "rcsPosition": "C2-F3"
+    },
+    "status": "CANCELLED",
+    "createdAt": "2026-07-29T03:19:57.404Z",
+    "delaySeconds": 30,
+    "delayStartedAt": "2026-07-29T03:19:57.414Z",
+    "delayUntil": "2026-07-29T03:20:27.414Z",
+    "rcsBaseUrl": "http://192.168.8.100:7000",
+    "rcsPayload": {
+      "modelProcessCode": "FP150Task",
+      "fromSystem": "TSC",
+      "orderId": "1785295197404841042",
+      "taskOrderDetail": [
+        {
+          "taskPath": "C2-F2,C2-F3",
+          "deviceNum": "F001"
+        }
+      ]
+    },
+    "tuskrobotPayload": {
+      "taskId": "1785295197404841042",
+      "targets": [
+        "C2-F2",
+        "C2-F3"
+      ],
+      "deviceId": "F001",
+      "fromSystem": "TSC",
+      "configId": "FP150Task"
+    },
+    "useTuskrobotApi": false,
+    "startedAt": "2026-07-29T03:20:27.439Z",
+    "rcsResponse": {
+      "code": 1000,
+      "desc": "请求成功"
+    },
+    "sentAt": "2026-07-29T03:20:29.661Z",
+    "taskStatusCode": 9,
+    "taskOrderDetail": [
+      {
+        "deviceNum": "F001",
+        "qrContent": "10000079",
+        "storageNum": "C2-F2",
+        "subTaskStatus": 1,
+        "subTaskSeq": 0,
+        "time": 1785295249,
+        "subTaskTypeId": 20,
+        "subTaskId": 28592,
+        "status": 9
+      }
+    ],
+    "lastRcsStatusAt": "2026-07-29T03:20:49.852Z",
+    "finishedAt": "2026-07-29T03:20:50.593Z",
+    "note": "Cancelled running task in RCS"
+  },
+  {
+    "orderId": "1785295097692352478",
+    "robotId": "fp150",
+    "robotName": "FP150",
+    "modelProcessType": "delivery",
+    "modelProcessCode": "FP150Task",
+    "pickup": {
+      "id": "s-c2-f2",
+      "name": "C2-F2",
+      "rcsPosition": "C2-F2"
+    },
+    "drop": {
+      "id": "s-c2-f3",
+      "name": "C2-F3",
+      "rcsPosition": "C2-F3"
+    },
+    "status": "CANCELLED",
+    "createdAt": "2026-07-29T03:18:17.692Z",
+    "delaySeconds": 60,
+    "delayStartedAt": "2026-07-29T03:18:17.708Z",
+    "delayUntil": "2026-07-29T03:19:17.708Z",
+    "rcsBaseUrl": "http://192.168.8.100:7000",
+    "rcsPayload": {
+      "modelProcessCode": "FP150Task",
+      "fromSystem": "TSC",
+      "orderId": "1785295097692352478",
+      "taskOrderDetail": [
+        {
+          "taskPath": "C2-F2,C2-F3",
+          "deviceNum": "F001"
+        }
+      ]
+    },
+    "tuskrobotPayload": {
+      "taskId": "1785295097692352478",
+      "targets": [
+        "C2-F2",
+        "C2-F3"
+      ],
+      "deviceId": "F001",
+      "fromSystem": "TSC",
+      "configId": "FP150Task"
+    },
+    "useTuskrobotApi": false,
+    "startedAt": "2026-07-29T03:19:17.734Z",
+    "rcsResponse": {
+      "code": 1000,
+      "desc": "请求成功"
+    },
+    "sentAt": "2026-07-29T03:19:20.162Z",
+    "taskStatusCode": 3,
+    "taskOrderDetail": [
+      {
+        "deviceNum": "F001",
+        "qrContent": "10000079",
+        "storageNum": "C2-F2",
+        "subTaskStatus": 5,
+        "errorDesc": "ICS-BUSINESS请求取消任务",
+        "subTaskSeq": 0,
+        "time": 1785295171,
+        "subTaskTypeId": 20,
+        "subTaskId": 28588,
+        "status": 3
+      }
+    ],
+    "lastRcsStatusAt": "2026-07-29T03:19:32.445Z",
+    "finishedAt": "2026-07-29T03:19:32.681Z",
+    "rcsStatusResponse": {
+      "code": 1000,
+      "data": {
+        "areaId": 24,
+        "createTime": 1785295157,
+        "taskOrderDetail": [
+          {
+            "deviceNum": "F001",
+            "qrContent": "10000079",
+            "storageNum": "C2-F2",
+            "subTaskStatus": 5,
+            "errorDesc": "ICS-BUSINESS请求取消任务",
+            "subTaskSeq": 0,
+            "time": 1785295171,
+            "subTaskTypeId": 20,
+            "subTaskId": 28588,
+            "status": 3
+          }
+        ],
+        "fromSystem": "TSC",
+        "status": 3
+      },
+      "desc": "请求成功"
+    },
+    "note": "Cancelled running task in RCS"
+  },
+  {
+    "orderId": "1784801244090230087",
+    "robotId": "c040",
+    "robotName": "C040",
+    "modelProcessType": "delivery",
+    "modelProcessCode": "CmoveShelf",
+    "pickup": {
+      "id": "s-r2",
+      "name": "R2",
+      "rcsPosition": "R2"
+    },
+    "drop": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "status": "CANCELLED",
+    "createdAt": "2026-07-23T10:07:24.090Z",
+    "delaySeconds": 120,
+    "delayStartedAt": "2026-07-23T10:07:24.098Z",
+    "delayUntil": "2026-07-23T10:09:24.098Z",
+    "rcsBaseUrl": "http://192.168.8.100:7000",
+    "rcsPayload": {
+      "modelProcessCode": "CmoveShelf",
+      "fromSystem": "TSC",
+      "orderId": "1784801244090230087",
+      "taskOrderDetail": [
+        {
+          "taskPath": "R2,P2",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "tuskrobotPayload": {
+      "taskId": "1784801244090230087",
+      "targets": [
+        "R2",
+        "P2"
+      ],
+      "deviceId": "8899",
+      "fromSystem": "TSC",
+      "configId": "CmoveShelf"
+    },
+    "useTuskrobotApi": false,
+    "finishedAt": "2026-07-23T10:07:39.609Z",
+    "note": "Cancelled before sending to RCS"
+  },
+  {
+    "orderId": "1784798615458755374",
+    "robotId": "c040",
+    "robotName": "C040",
+    "modelProcessType": "process2",
+    "modelProcessCode": "C000000",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "CANCELLED",
+    "createdAt": "2026-07-23T09:23:35.458Z",
+    "delaySeconds": 180,
+    "delayStartedAt": "2026-07-23T09:23:35.470Z",
+    "delayUntil": "2026-07-23T09:26:35.470Z",
+    "rcsBaseUrl": "http://192.168.8.100:7000",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784798615458755374",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "tuskrobotPayload": {
+      "taskId": "1784798615458755374",
+      "targets": [
+        "P2",
+        "testj"
+      ],
+      "deviceId": "8899",
+      "fromSystem": "TSC",
+      "configId": "C000000"
+    },
+    "useTuskrobotApi": false,
+    "finishedAt": "2026-07-23T09:23:44.854Z",
+    "note": "Cancelled before sending to RCS"
+  },
+  {
+    "orderId": "1784798337444992564",
+    "robotId": "c040",
+    "robotName": "C040",
+    "modelProcessType": "delivery",
+    "modelProcessCode": "CmoveShelf",
+    "pickup": {
+      "id": "s-r1",
+      "name": "R1",
+      "rcsPosition": "R1"
+    },
+    "drop": {
+      "id": "s-r3",
+      "name": "R3",
+      "rcsPosition": "R3"
+    },
+    "status": "CANCELLED",
+    "createdAt": "2026-07-23T09:18:57.444Z",
+    "delaySeconds": 120,
+    "delayStartedAt": "2026-07-23T09:19:09.818Z",
+    "delayUntil": "2026-07-23T09:21:09.818Z",
+    "rcsBaseUrl": "http://192.168.8.100:7000",
+    "rcsPayload": {
+      "modelProcessCode": "CmoveShelf",
+      "fromSystem": "TSC",
+      "orderId": "1784798337444992564",
+      "taskOrderDetail": [
+        {
+          "taskPath": "R1,R3",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "tuskrobotPayload": {
+      "taskId": "1784798337444992564",
+      "targets": [
+        "R1",
+        "R3"
+      ],
+      "deviceId": "8899",
+      "fromSystem": "TSC",
+      "configId": "CmoveShelf"
+    },
+    "useTuskrobotApi": false,
+    "finishedAt": "2026-07-23T09:19:12.674Z",
+    "note": "Cancelled before sending to RCS"
+  },
+  {
+    "orderId": "1784798296063575648",
+    "robotId": "c040",
+    "robotName": "C040",
+    "modelProcessType": "delivery",
+    "modelProcessCode": "CmoveShelf",
+    "pickup": {
+      "id": "s-r1",
+      "name": "R1",
+      "rcsPosition": "R1"
+    },
+    "drop": {
+      "id": "s-p1",
+      "name": "P1",
+      "rcsPosition": "P1"
+    },
+    "status": "CANCELLED",
+    "createdAt": "2026-07-23T09:18:16.063Z",
+    "delaySeconds": 120,
+    "delayStartedAt": "2026-07-23T09:18:16.091Z",
+    "delayUntil": "2026-07-23T09:20:16.091Z",
+    "rcsBaseUrl": "http://192.168.8.100:7000",
+    "rcsPayload": {
+      "modelProcessCode": "CmoveShelf",
+      "fromSystem": "TSC",
+      "orderId": "1784798296063575648",
+      "taskOrderDetail": [
+        {
+          "taskPath": "R1,P1",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "tuskrobotPayload": {
+      "taskId": "1784798296063575648",
+      "targets": [
+        "R1",
+        "P1"
+      ],
+      "deviceId": "8899",
+      "fromSystem": "TSC",
+      "configId": "CmoveShelf"
+    },
+    "useTuskrobotApi": false,
+    "finishedAt": "2026-07-23T09:19:09.809Z",
+    "note": "Cancelled before sending to RCS"
+  },
+  {
+    "orderId": "1784798114812125707",
+    "robotId": "c040",
+    "robotName": "C040",
+    "modelProcessType": "delivery",
+    "modelProcessCode": "CmoveShelf",
+    "pickup": {
+      "id": "s-r1",
+      "name": "R1",
+      "rcsPosition": "R1"
+    },
+    "drop": {
+      "id": "s-p1",
+      "name": "P1",
+      "rcsPosition": "P1"
+    },
+    "status": "CANCELLED",
+    "createdAt": "2026-07-23T09:15:14.812Z",
+    "delaySeconds": 120,
+    "delayStartedAt": "2026-07-23T09:15:14.822Z",
+    "delayUntil": "2026-07-23T09:17:14.822Z",
+    "rcsBaseUrl": "http://192.168.8.100:7000",
+    "rcsPayload": {
+      "modelProcessCode": "CmoveShelf",
+      "fromSystem": "TSC",
+      "orderId": "1784798114812125707",
+      "taskOrderDetail": [
+        {
+          "taskPath": "R1,P1",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "tuskrobotPayload": {
+      "taskId": "1784798114812125707",
+      "targets": [
+        "R1",
+        "P1"
+      ],
+      "deviceId": "8899",
+      "fromSystem": "TSC",
+      "configId": "CmoveShelf"
+    },
+    "useTuskrobotApi": false,
+    "finishedAt": "2026-07-23T09:16:07.027Z",
+    "note": "Cancelled before sending to RCS"
+  },
+  {
+    "orderId": "1784701979808251754",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "drop": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-22T06:32:59.808Z",
+    "startedAt": "2026-07-22T06:32:59.813Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784701979808251754",
+      "taskOrderDetail": [
+        {
+          "taskPath": "testj,P2",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T06:33:00.488Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1784701979808251754",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1784701833758386594",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-22T06:30:33.758Z",
+    "startedAt": "2026-07-22T06:30:33.760Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784701833758386594",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T06:30:34.160Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1784701833758386594",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1784701618791497609",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-22T06:26:58.791Z",
+    "startedAt": "2026-07-22T06:26:58.795Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784701618791497609",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T06:26:59.450Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1784701618791497609",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "178470146813694012",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "drop": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-22T06:24:28.136Z",
+    "startedAt": "2026-07-22T06:24:28.137Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "178470146813694012",
+      "taskOrderDetail": [
+        {
+          "taskPath": "testj,P2",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T06:24:28.520Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "178470146813694012",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1784701314558694628",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-22T06:21:54.558Z",
+    "startedAt": "2026-07-22T06:21:54.560Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784701314558694628",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T06:21:55.017Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1784701314558694628",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1784701174422293389",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "drop": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-22T06:19:34.422Z",
+    "startedAt": "2026-07-22T06:19:34.429Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784701174422293389",
+      "taskOrderDetail": [
+        {
+          "taskPath": "testj,P2",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T06:19:35.152Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1784701174422293389",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "178470104874551821",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-22T06:17:28.745Z",
+    "startedAt": "2026-07-22T06:17:28.746Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "178470104874551821",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T06:17:29.101Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "178470104874551821",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "178469699604181526",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-22T05:09:56.041Z",
+    "startedAt": "2026-07-22T05:09:56.044Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "178469699604181526",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T05:09:56.421Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "178469699604181526",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1784696212896664958",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-22T04:56:52.896Z",
+    "startedAt": "2026-07-22T04:56:52.897Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784696212896664958",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T04:56:53.866Z",
+    "rcsResponse": {
+      "code": 30007,
+      "data": "",
+      "desc": "任务指定或模板指派的设备不存在"
+    },
+    "error": "任务指定或模板指派的设备不存在"
+  },
+  {
+    "orderId": "178469605444176313",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-22T04:54:14.441Z",
+    "startedAt": "2026-07-22T04:54:14.442Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "178469605444176313",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T04:54:15.007Z",
+    "rcsResponse": {
+      "code": 30007,
+      "data": "",
+      "desc": "任务指定或模板指派的设备不存在"
+    },
+    "error": "任务指定或模板指派的设备不存在"
+  },
+  {
+    "orderId": "1784695873620176236",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-22T04:51:13.620Z",
+    "startedAt": "2026-07-22T04:51:13.621Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784695873620176236",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T04:51:13.998Z",
+    "rcsResponse": {
+      "code": 30007,
+      "data": "",
+      "desc": "任务指定或模板指派的设备不存在"
+    },
+    "error": "任务指定或模板指派的设备不存在"
+  },
+  {
+    "orderId": "1784695725421461724",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "drop": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-22T04:48:45.421Z",
+    "startedAt": "2026-07-22T04:48:45.421Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784695725421461724",
+      "taskOrderDetail": [
+        {
+          "taskPath": "testj,P2",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T04:48:45.803Z",
+    "rcsResponse": {
+      "code": 30007,
+      "data": "",
+      "desc": "任务指定或模板指派的设备不存在"
+    },
+    "error": "任务指定或模板指派的设备不存在"
+  },
+  {
+    "orderId": "1784695535075132078",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "drop": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-22T04:45:35.075Z",
+    "startedAt": "2026-07-22T04:45:35.076Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784695535075132078",
+      "taskOrderDetail": [
+        {
+          "taskPath": "testj,P2",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T04:45:35.372Z",
+    "rcsResponse": {
+      "code": 30007,
+      "data": "",
+      "desc": "任务指定或模板指派的设备不存在"
+    },
+    "error": "任务指定或模板指派的设备不存在"
+  },
+  {
+    "orderId": "1784694992892725591",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "drop": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-22T04:36:32.892Z",
+    "startedAt": "2026-07-22T04:36:32.895Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784694992892725591",
+      "taskOrderDetail": [
+        {
+          "taskPath": "testj,P2",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T04:36:33.257Z",
+    "rcsResponse": {
+      "code": 30007,
+      "data": "",
+      "desc": "任务指定或模板指派的设备不存在"
+    },
+    "error": "任务指定或模板指派的设备不存在"
+  },
+  {
+    "orderId": "1784694825768134754",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "drop": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-22T04:33:45.768Z",
+    "startedAt": "2026-07-22T04:33:45.770Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784694825768134754",
+      "taskOrderDetail": [
+        {
+          "taskPath": "testj,P2",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T04:33:47.146Z",
+    "rcsResponse": {
+      "code": 30007,
+      "data": "",
+      "desc": "任务指定或模板指派的设备不存在"
+    },
+    "error": "任务指定或模板指派的设备不存在"
+  },
+  {
+    "orderId": "1784694782239697916",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "drop": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-07-22T04:33:02.239Z",
+    "startedAt": "2026-07-22T04:33:02.239Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784694782239697916",
+      "taskOrderDetail": [
+        {
+          "taskPath": "testj,P2",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-22T04:33:08.230Z",
+    "rcsResponse": {
+      "code": 30007,
+      "data": "",
+      "desc": "任务指定或模板指派的设备不存在"
+    },
+    "error": "任务指定或模板指派的设备不存在"
+  },
+  {
+    "orderId": "178463133778225441",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-21T10:55:37.782Z",
+    "startedAt": "2026-07-21T10:55:37.788Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "178463133778225441",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-21T10:55:38.116Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "178463133778225441",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1784631245176712203",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "drop": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-21T10:54:05.176Z",
+    "startedAt": "2026-07-21T10:54:05.178Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784631245176712203",
+      "taskOrderDetail": [
+        {
+          "taskPath": "testj,P2",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-21T10:54:06.068Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1784631245176712203",
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1784631037821474216",
+    "robotId": "c040",
+    "robotName": "C040",
+    "pickup": {
+      "id": "s-p2",
+      "name": "P2",
+      "rcsPosition": "P2"
+    },
+    "drop": {
+      "id": "s-testj",
+      "name": "testj",
+      "rcsPosition": "testj"
+    },
+    "status": "SUCCESS",
+    "createdAt": "2026-07-21T10:50:37.826Z",
+    "startedAt": "2026-07-21T10:50:37.868Z",
+    "rcsPayload": {
+      "modelProcessCode": "C000000",
+      "fromSystem": "TSC",
+      "orderId": "1784631037821474216",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P2,testj",
+          "deviceNum": "C04-1"
+        }
+      ]
+    },
+    "finishedAt": "2026-07-21T10:50:38.196Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1784631037821474216",
+      "desc": "请求成功"
+    }
+  },
+  {
     "orderId": "1783668818714606417",
     "robotId": "e10",
     "robotName": "E10",

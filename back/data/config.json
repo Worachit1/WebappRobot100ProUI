@@ -10,8 +10,7 @@
       "baseUrl": "http://192.168.8.100:7000",
       "areaIds": [
         24,
-        15,
-        8
+        3
       ]
     }
   ],
@@ -19,11 +18,12 @@
     {
       "id": "c040",
       "name": "C040",
-      "deviceNum": "C04-1",
+      "deviceNum": "8899",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/C0401.png",
       "modelProcessCode": {
-        "delivery": "CmoveShelf"
+        "delivery": "CmoveShelf",
+        "process2": "C000000"
       }
     },
     {
@@ -241,6 +241,11 @@
           "id": "s-p2",
           "name": "P2",
           "rcsPosition": "P2"
+        },
+        {
+          "id": "s-testj",
+          "name": "testj",
+          "rcsPosition": "testj"
         }
       ],
       "c100": [

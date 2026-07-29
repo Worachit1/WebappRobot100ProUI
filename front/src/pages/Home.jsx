@@ -102,20 +102,20 @@ function Home() {
           STATUS
         </Button>
       </Box>
-      <Button
-        variant="outlined"
-        color="primary"
-        sx={{
-          borderRadius: "4px",
-          width: "100%",
-          py: 1.4,
-          fontWeight: 900,
-          fontSize: 20,
-        }}
-        onClick={() => navigate("/admin")}
-      >
-        SETTINGs
-      </Button>
+       <Button
+          variant="outlined"
+          color="primary"
+          sx={{
+            borderRadius: "4px",
+            width: "100%",
+            py: 1.4,
+            fontWeight: 900,
+            fontSize: 20,
+          }}
+          onClick={() => navigate("/admin")}
+        >
+          SETTINGS
+        </Button>
     </ScreenLayout>
   );
 }

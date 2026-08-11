@@ -1,5 +1,204 @@
 [
   {
+    "orderId": "1785747620215478717",
+    "robotId": "c040",
+    "robotName": "C040",
+    "modelProcessType": "delivery",
+    "modelProcessCode": "CmoveShelf",
+    "pickup": {
+      "id": "s-p3",
+      "name": "P3",
+      "rcsPosition": "P3"
+    },
+    "drop": {
+      "id": "s-a1",
+      "name": "A1",
+      "rcsPosition": "A1"
+    },
+    "status": "COMPLETED",
+    "createdAt": "2026-08-03T09:00:20.216Z",
+    "delaySeconds": 0,
+    "delayStartedAt": null,
+    "delayUntil": null,
+    "rcsBaseUrl": "http://192.168.8.100:7000",
+    "rcsPayload": {
+      "modelProcessCode": "CmoveShelf",
+      "fromSystem": "TSC",
+      "orderId": "1785747620215478717",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P3,A1",
+          "deviceNum": "C040"
+        }
+      ]
+    },
+    "tuskrobotPayload": {
+      "taskId": "1785747620215478717",
+      "targets": [
+        "P3",
+        "A1"
+      ],
+      "deviceId": "C040",
+      "fromSystem": "TSC",
+      "configId": "CmoveShelf"
+    },
+    "useTuskrobotApi": false,
+    "startedAt": "2026-08-03T09:00:20.226Z",
+    "rcsResponse": {
+      "code": 1000,
+      "data": "1785747620215478717",
+      "desc": "请求成功"
+    },
+    "sentAt": "2026-08-03T09:00:20.384Z",
+    "taskStatusCode": 8,
+    "taskOrderDetail": [
+      {
+        "deviceNum": "C040",
+        "qrContent": "30000279",
+        "subTaskStatus": 3,
+        "subTaskSeq": 3,
+        "shelfNumber": "A0000008",
+        "time": 1785747699,
+        "deviceCode": "EK00004AAK00003",
+        "subTaskTypeId": 5,
+        "subTaskId": 29304,
+        "status": "8"
+      }
+    ],
+    "lastRcsStatusAt": "2026-08-03T09:01:46.739Z",
+    "finishedAt": "2026-08-03T09:01:46.744Z",
+    "rcsStatusResponse": {
+      "code": 1000,
+      "data": {
+        "areaId": 24,
+        "createTime": 1785747613,
+        "taskOrderDetail": [
+          {
+            "deviceNum": "C040",
+            "qrContent": "30000279",
+            "subTaskStatus": 3,
+            "subTaskSeq": 3,
+            "shelfNumber": "A0000008",
+            "time": 1785747699,
+            "deviceCode": "EK00004AAK00003",
+            "subTaskTypeId": 5,
+            "subTaskId": 29304,
+            "status": "8"
+          }
+        ],
+        "fromSystem": "TSC",
+        "status": 8
+      },
+      "desc": "请求成功"
+    }
+  },
+  {
+    "orderId": "1785747542864760556",
+    "robotId": "c040",
+    "robotName": "C040",
+    "modelProcessType": "delivery",
+    "modelProcessCode": "CmoveShelf",
+    "pickup": {
+      "id": "s-p3",
+      "name": "P3",
+      "rcsPosition": "P3"
+    },
+    "drop": {
+      "id": "s-a1",
+      "name": "A1",
+      "rcsPosition": "A1"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-08-03T08:59:02.864Z",
+    "delaySeconds": 0,
+    "delayStartedAt": null,
+    "delayUntil": null,
+    "rcsBaseUrl": "http://192.168.8.100:7000",
+    "rcsPayload": {
+      "modelProcessCode": "CmoveShelf",
+      "fromSystem": "TSC",
+      "orderId": "1785747542864760556",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P3,A1",
+          "deviceNum": "c04-1"
+        }
+      ]
+    },
+    "tuskrobotPayload": {
+      "taskId": "1785747542864760556",
+      "targets": [
+        "P3",
+        "A1"
+      ],
+      "deviceId": "c04-1",
+      "fromSystem": "TSC",
+      "configId": "CmoveShelf"
+    },
+    "useTuskrobotApi": false,
+    "startedAt": "2026-08-03T08:59:02.875Z",
+    "finishedAt": "2026-08-03T08:59:03.035Z",
+    "rcsResponse": {
+      "code": 30007,
+      "data": "",
+      "desc": "任务指定或模板指派的设备不存在"
+    },
+    "error": "任务指定或模板指派的设备不存在"
+  },
+  {
+    "orderId": "1785747457640268611",
+    "robotId": "c040",
+    "robotName": "C040",
+    "modelProcessType": "delivery",
+    "modelProcessCode": "CmoveShelf",
+    "pickup": {
+      "id": "s-p3",
+      "name": "P3",
+      "rcsPosition": "P3"
+    },
+    "drop": {
+      "id": "s-a1",
+      "name": "A1",
+      "rcsPosition": "A1"
+    },
+    "status": "FAILED",
+    "createdAt": "2026-08-03T08:57:37.640Z",
+    "delaySeconds": 0,
+    "delayStartedAt": null,
+    "delayUntil": null,
+    "rcsBaseUrl": "http://192.168.8.100:7000",
+    "rcsPayload": {
+      "modelProcessCode": "CmoveShelf",
+      "fromSystem": "TSC",
+      "orderId": "1785747457640268611",
+      "taskOrderDetail": [
+        {
+          "taskPath": "P3,A1",
+          "deviceNum": "8899"
+        }
+      ]
+    },
+    "tuskrobotPayload": {
+      "taskId": "1785747457640268611",
+      "targets": [
+        "P3",
+        "A1"
+      ],
+      "deviceId": "8899",
+      "fromSystem": "TSC",
+      "configId": "CmoveShelf"
+    },
+    "useTuskrobotApi": false,
+    "startedAt": "2026-08-03T08:57:37.661Z",
+    "finishedAt": "2026-08-03T08:57:37.826Z",
+    "rcsResponse": {
+      "code": 30007,
+      "data": "",
+      "desc": "任务指定或模板指派的设备不存在"
+    },
+    "error": "任务指定或模板指派的设备不存在"
+  },
+  {
     "orderId": "1785295197404841042",
     "robotId": "fp150",
     "robotName": "FP150",

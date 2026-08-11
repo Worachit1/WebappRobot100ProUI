@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
+  colors,
   Dialog,
   DialogActions,
   DialogContent,
@@ -99,23 +100,47 @@ function Home() {
           }}
           onClick={() => navigate("/status")}
         >
-          STATUS
+          STATUS / {" "}
+          <Box
+            component="span"
+            sx={{
+              color: "#f44336",
+              fontWeight: 900,
+              ml: 1
+            }}
+          >
+            {" "} CANCEL TASK
+          </Box>
         </Button>
       </Box>
-       <Button
-          variant="outlined"
-          color="primary"
-          sx={{
-            borderRadius: "4px",
-            width: "100%",
-            py: 1.4,
-            fontWeight: 900,
-            fontSize: 20,
-          }}
-          onClick={() => navigate("/admin")}
-        >
-          SETTINGS
-        </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        sx={{
+          borderRadius: "4px",
+          width: "100%",
+          py: 1.4,
+          fontWeight: 900,
+          fontSize: 20,
+        }}
+        onClick={() => navigate("/admin")}
+      >
+        SETTINGS
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        sx={{
+          borderRadius: "4px",
+          width: "100%",
+          py: 1.4,
+          fontWeight: 900,
+          fontSize: 20,
+        }}
+        onClick={() => navigate("/map-dashboard")}
+      >
+        MAP DASHBOARD
+      </Button>
     </ScreenLayout>
   );
 }

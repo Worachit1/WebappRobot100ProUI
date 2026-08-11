@@ -48,6 +48,13 @@ export function updateConfig(config) {
   });
 }
 
+export function toggleForbiddenZone(matterArea, enabled) {
+  return apiRequest("/config/forbidden-zones/toggle", {
+    method: "POST",
+    body: JSON.stringify({ matterArea, enabled }),
+  });
+}
+
 export async function scanPickupLocation(barcode) {
   return apiRequest("/orders/scan-pickup-location", {
     method: "POST",
@@ -117,6 +124,10 @@ export function cancelRunningOrder(orderId, releaseOnly = false) {
 
 export function fetchRobotStatus(robotId) {
   return apiRequest(`/status/${robotId}`);
+}
+
+export function fetchMapDashboard(areaId = 24) {
+  return apiRequest(`/map-dashboard?areaId=${encodeURIComponent(areaId)}`);
 }
 
 /** Origin ของ backend (ไม่มี /api) — สำหรับ POST /door/... และ GET /door/... */

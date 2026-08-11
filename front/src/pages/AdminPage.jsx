@@ -8,6 +8,7 @@ import {
   IconButton,
   Paper,
   Stack,
+  Switch,
   TextField,
   Tooltip,
   Typography,
@@ -21,7 +22,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useNavigate } from "react-router-dom";
 
 import ScreenLayout from "../components/ScreenLayout.jsx";
-import { fetchConfig, updateConfig } from "../api/client.js";
+import { fetchConfig, toggleForbiddenZone, updateConfig } from "../api/client.js";
 
 function getPrimaryBaseUrl(config) {
   return config?.rcs?.[0]?.baseUrl || "";
@@ -51,6 +52,14 @@ function rowsToModelProcess(rows) {
     }
     return result;
   }, {});
+}
+
+function makeForbiddenZone() {
+  return {
+    id: `fz-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    name: "",
+    enabled: false,
+  };
 }
 
 function ModelProcessEditor({ robot, onChange }) {
@@ -181,6 +190,7 @@ function AdminPage() {
   const [config, setConfig] = useState(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [zoneActionId, setZoneActionId] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -249,6 +259,61 @@ function AdminPage() {
       setError(err.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const addForbiddenZone = () => {
+    setConfig((current) => ({
+      ...current,
+      forbiddenZones: [...(current.forbiddenZones || []), makeForbiddenZone()],
+    }));
+  };
+
+  const updateForbiddenZone = (zoneId, patch) => {
+    setConfig((current) => ({
+      ...current,
+      forbiddenZones: (current.forbiddenZones || []).map((zone) =>
+        zone.id === zoneId ? { ...zone, ...patch } : zone,
+      ),
+    }));
+  };
+
+  const removeForbiddenZone = (zoneId) => {
+    setConfig((current) => ({
+      ...current,
+      forbiddenZones: (current.forbiddenZones || []).filter(
+        (zone) => zone.id !== zoneId,
+      ),
+    }));
+  };
+
+  const handleToggleForbiddenZone = async (zone) => {
+    const name = String(zone.name || "").trim();
+    if (!name) {
+      setError("Restricted Area name is required");
+      return;
+    }
+
+    const nextEnabled = !zone.enabled;
+    setError("");
+    setMessage("");
+    setZoneActionId(zone.id);
+
+    try {
+      const result = await toggleForbiddenZone(name, nextEnabled);
+      updateForbiddenZone(zone.id, {
+        name,
+        enabled: nextEnabled,
+        lastUpdatedAt: result.zone?.lastUpdatedAt || new Date().toISOString(),
+        lastRcsResponse: result.rcsResponse,
+      });
+      setMessage(
+        `${name} ${nextEnabled ? "enabled" : "disabled"} successfully`,
+      );
+    } catch (err) {
+      setError(err.message || "Toggle restricted area failed");
+    } finally {
+      setZoneActionId("");
     }
   };
 
@@ -373,6 +438,130 @@ function AdminPage() {
               value={getPrimaryBaseUrl(config)}
               onChange={(event) => updatePrimaryBaseUrl(event.target.value)}
             />
+          </Paper>
+
+          <Paper
+            elevation={0}
+            sx={{
+              border: "1px solid #cddbf8",
+              borderRadius: "4px",
+              p: { xs: 2, md: 2.5 },
+              mb: 2,
+              bgcolor: "#fff",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 1.5,
+                mb: 1.5,
+              }}
+            >
+              <Typography
+                sx={{
+                  color: "#1c2755",
+                  fontSize: 15,
+                  fontWeight: 900,
+                }}
+              >
+                RESTRICTED AREA CONTROL
+              </Typography>
+              <Tooltip title="Add restricted area">
+                <IconButton
+                  color="primary"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onClick={addForbiddenZone}
+                  sx={{
+                    bgcolor: "#eef4ff",
+                    border: "1px solid #cddbf8",
+                    "&:hover": { bgcolor: "#dfeaff" },
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+
+            <Stack spacing={1}>
+              {(config?.forbiddenZones || []).length === 0 ? (
+                <Typography sx={{ color: "#667085", fontSize: 14 }}>
+                  No restricted area configured
+                </Typography>
+              ) : (
+                (config?.forbiddenZones || []).map((zone) => (
+                  <Box
+                    key={zone.id}
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: {
+                        xs: "1fr",
+                        md: "1fr 150px 44px",
+                      },
+                      gap: 1,
+                      alignItems: "center",
+                      p: 1,
+                      border: "1px solid #e8edf7",
+                      borderRadius: "4px",
+                      bgcolor: "#fbfcff",
+                    }}
+                  >
+                    <TextField
+                      size="small"
+                      label="matterArea"
+                      value={zone.name || ""}
+                      onMouseDown={(event) => event.stopPropagation()}
+                      onChange={(event) =>
+                        updateForbiddenZone(zone.id, {
+                          name: event.target.value,
+                        })
+                      }
+                    />
+
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: { xs: "space-between", md: "center" },
+                        gap: 1,
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          color: zone.enabled ? "#2e7d32" : "#667085",
+                          fontWeight: 900,
+                          fontSize: 13,
+                        }}
+                      >
+                        {zone.enabled ? "ENABLE" : "DISABLE"}
+                      </Typography>
+                      <Switch
+                        checked={Boolean(zone.enabled)}
+                        disabled={zoneActionId === zone.id}
+                        onMouseDown={(event) => event.stopPropagation()}
+                        onChange={() => handleToggleForbiddenZone(zone)}
+                      />
+                    </Box>
+
+                    <Tooltip title="Delete restricted area">
+                      <IconButton
+                        color="error"
+                        onMouseDown={(event) => event.stopPropagation()}
+                        onClick={() => removeForbiddenZone(zone.id)}
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          justifySelf: { xs: "end", md: "center" },
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                ))
+              )}
+            </Stack>
           </Paper>
 
           <Box

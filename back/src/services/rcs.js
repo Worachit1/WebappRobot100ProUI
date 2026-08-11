@@ -30,6 +30,48 @@ async function cancelTask(baseUrl, tasks) {
   return res.data;
 }
 
+async function getStockStatus(baseUrl, payload) {
+  const res = await axios.post(`${baseUrl}/ics/out/getStockStatus`, payload, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    timeout: 10000,
+  });
+  return res.data;
+}
+
+async function getTopologyList(baseUrl, areaId) {
+  const res = await axios.post(
+    `${baseUrl}/ics/out/topologyList`,
+    { areaId: Number(areaId) },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      timeout: 10000,
+    },
+  );
+  return res.data;
+}
+
+async function enableForbiddenZone(baseUrl, matterArea, enabled) {
+  const payload = {
+    indBind: enabled ? 1 : 0,
+    matterArea,
+  };
+  const res = await axios.post(
+    `${baseUrl}/ics/out/enableForbiddenZone`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      timeout: 10000,
+    },
+  );
+  return res.data;
+}
+
 /**
  * Get AGV status list from RCS (IRAYPLE API 4.1.2.1) for one area.
  * Body: areaId, deviceType (0), deviceCode (optional fuzzy filter).
@@ -101,6 +143,9 @@ module.exports = {
   sendTaskOrder,
   getTaskOrderStatus,
   cancelTask,
+  getStockStatus,
+  getTopologyList,
+  enableForbiddenZone,
   getDeviceListByArea,
   getDeviceStatusFromAllAreas,
   sendTaskOrderTuskrobot

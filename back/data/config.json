@@ -10,7 +10,8 @@
       "baseUrl": "http://192.168.8.100:7000",
       "areaIds": [
         24,
-        3
+        3,
+        25
       ]
     }
   ],
@@ -18,7 +19,7 @@
     {
       "id": "c040",
       "name": "C040",
-      "deviceNum": "8899",
+      "deviceNum": "C040",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/C0401.png",
       "modelProcessCode": {
@@ -38,8 +39,8 @@
     },
     {
       "id": "d150d",
-      "name": "D150D",
-      "deviceNum": "D001",
+      "name": "D150T",
+      "deviceNum": "D150T-1",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/D150D1.png",
       "modelProcessCode": {
@@ -49,7 +50,7 @@
     {
       "id": "fp150",
       "name": "FP150",
-      "deviceNum": "F001",
+      "deviceNum": "FP150-1",
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/FP1501.png",
       "modelProcessCode": {
@@ -243,9 +244,14 @@
           "rcsPosition": "P2"
         },
         {
-          "id": "s-testj",
-          "name": "testj",
-          "rcsPosition": "testj"
+          "id": "s-p3",
+          "name": "P3",
+          "rcsPosition": "P3"
+        },
+        {
+          "id": "s-a1",
+          "name": "A1",
+          "rcsPosition": "A1"
         }
       ],
       "c100": [
@@ -350,6 +356,42 @@
     {
       "id": "sw-board-sw2",
       "inputIndex": 5
+    }
+  ],
+  "forbiddenZones": [
+    {
+      "id": "fz-1786351130925-c7nb4rkwwip",
+      "name": "NoC",
+      "enabled": false,
+      "lastUpdatedAt": "2026-08-11T07:38:51.149Z",
+      "lastRcsResponse": {
+        "code": 1000,
+        "data": {},
+        "desc": "请求成功"
+      }
+    },
+    {
+      "id": "fz-1786351468688-897rxckgps7",
+      "name": "D150T stop",
+      "enabled": false,
+      "lastUpdatedAt": "2026-08-11T07:39:18.742Z",
+      "lastRcsResponse": {
+        "code": 1000,
+        "data": {},
+        "desc": "请求成功"
+      }
+    }
+  ],
+  "autoStockPickupJobs": [
+    {
+      "id": "auto-c040-r1-r2",
+      "enabled": true,
+      "areaId": "24",
+      "robotId": "c040",
+      "modelProcessType": "delivery",
+      "modelProcessCode": "CmoveShelf",
+      "pickupName": "R1",
+      "dropName": "R2"
     }
   ]
 }

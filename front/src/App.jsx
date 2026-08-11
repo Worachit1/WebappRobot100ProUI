@@ -13,6 +13,7 @@ import DropSelect from "./pages/DropSelect.jsx";
 import Status from "./pages/Status.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
 import PointStatePage from "./pages/PointStatePage.jsx";
+import MapDashboard from "./pages/MapDashboard.jsx";
 
 function isAuthed() {
   return Boolean(localStorage.getItem("authUser"));
@@ -78,6 +79,15 @@ function App() {
           element={
             <RequireAuth>
               <Status />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/map-dashboard"
+          element={
+            <RequireAuth>
+              <MapDashboard />
             </RequireAuth>
           }
         />

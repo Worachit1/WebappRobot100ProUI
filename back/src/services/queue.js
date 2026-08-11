@@ -183,6 +183,8 @@ async function enqueueOrder(order, context) {
     rcsPayload,
     tuskrobotPayload,
     useTuskrobotApi: Boolean(useTuskrobotApi),
+    autoStockPickup: Boolean(order.autoStockPickup),
+    autoStockPickupJobId: order.autoStockPickupJobId || null,
   });
 
   processRobotQueue(order.robotId).catch((err) => {

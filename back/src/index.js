@@ -7,6 +7,8 @@ const ordersRoutes = require("./routes/orders");
 const statusRoutes = require("./routes/status");
 const robotsRoutes = require("./routes/robots");
 const locationsRoutes = require("./routes/locations");
+const mapDashboardRoutes = require("./routes/mapDashboard");
+const autoStockPickup = require("./services/autoStockPickup");
 const palletSensorMonitor = require("./services/palletSensorMonitor");
 
 
@@ -14,6 +16,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 palletSensorMonitor.startPalletSensorMonitor();
+// autoStockPickup.startAutoStockPickup();
 
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
@@ -28,6 +31,7 @@ app.use("/api/orders", ordersRoutes);
 app.use("/api/status", statusRoutes);
 app.use("/api/robots", robotsRoutes);
 app.use("/api/locations", locationsRoutes);
+app.use("/api/map-dashboard", mapDashboardRoutes);
 
 const server = app.listen(port, () => {
   console.log(`Backend listening on port ${port}`);

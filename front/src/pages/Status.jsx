@@ -287,6 +287,47 @@ function Status() {
     }
   };
 
+  const handleReleaseRunning = async (task) => {
+    const result = await Swal.fire({
+      title: "Release WebApp Task?",
+      html: `
+        <div style="text-align:left">
+          <p><b>Order ID:</b> ${task.orderId}</p>
+          <p>This will cancel/release this task in WebApp only.</p>
+          <p>Use this after the task was already cancelled in RCS.</p>
+        </div>
+      `,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Release",
+      cancelButtonText: "Back",
+      confirmButtonColor: "#ed6c02",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      setActionLoading(true);
+      await cancelRunningOrder(task.orderId, true);
+      await reloadStatus();
+      await Swal.fire({
+        icon: "success",
+        title: "Released",
+        timer: 1000,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Release failed",
+        text: err?.message || "Release task failed",
+      });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   return (
     <ScreenLayout
       title="สถานะหุ่นยนต์"
@@ -560,7 +601,7 @@ function Status() {
                             display: "grid",
                             gridTemplateColumns: {
                               xs: "1fr",
-                              md: "52px 1.3fr 1fr 120px 130px 100px",
+                              md: "52px 1.3fr 1fr 120px 130px 148px",
                             },
                             gap: 1,
                             alignItems: "center",
@@ -591,19 +632,42 @@ function Status() {
                               ? formatRemaining(task.remainingDelayMs)
                               : formatDelay(task.delaySeconds)}
                           </Typography>
-                          <Button
-                            variant="outlined"
-                            color="error"
-                            disabled={actionLoading}
-                            onClick={() =>
-                              task.canCancelRunning
-                                ? handleCancelRunning(task)
-                                : handleCancel(task)
-                            }
-                            sx={{ borderRadius: "4px", fontWeight: 900 }}
-                          >
-                            Cancel
-                          </Button>
+                          <Box sx={{ display: "flex", gap: 0.75 }}>
+                            <Button
+                              variant="outlined"
+                              color="error"
+                              disabled={actionLoading}
+                              onClick={() =>
+                                task.canCancelRunning
+                                  ? handleCancelRunning(task)
+                                  : handleCancel(task)
+                              }
+                              sx={{
+                                borderRadius: "4px",
+                                fontWeight: 900,
+                                minWidth: task.canCancelRunning ? 86 : 100,
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                            {task.canCancelRunning && (
+                              <Button
+                                variant="contained"
+                                disabled={actionLoading}
+                                onClick={() => handleReleaseRunning(task)}
+                                title="Release after cancelled in RCS"
+                                sx={{
+                                  borderRadius: "4px",
+                                  fontWeight: 900,
+                                  minWidth: 44,
+                                  bgcolor: "#ed6c02",
+                                  "&:hover": { bgcolor: "#c65300" },
+                                }}
+                              >
+                                R
+                              </Button>
+                            )}
+                          </Box>
                         </Box>
                       ))}
                     </Box>

@@ -132,10 +132,46 @@ async function getDeviceStatusFromAllAreas(baseUrl, deviceKeys, areaIds) {
 // tuskrobot 
 async function sendTaskOrderTuskrobot(baseUrl, payload) {
   const url = `${baseUrl}/rpc/createTask`;
-  console.log("[RCS] POST URL:", url);
-  console.log("[RCS] POST BODY:", JSON.stringify(payload, null, 2));
+  console.log("[RCS TUSK] POST URL:", url);
+  console.log("[RCS TUSK] POST BODY:", JSON.stringify(payload, null, 2));
   const res = await axios.post(url, payload);
-  console.log("[RCS] POST RESPONSE:", JSON.stringify(res.data, null, 2));
+  console.log("[RCS TUSK] POST RESPONSE:", JSON.stringify(res.data, null, 2));
+  return res.data;
+}
+
+async function cancelTaskTuskrobot(baseUrl, taskId) {
+  const url = `${baseUrl}/rpc/cancelTask`;
+  console.log("[RCS TUSK] CANCEL URL:", url);
+  const res = await axios.post(url, { taskId }, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    timeout: 10000,
+  });
+  console.log("[RCS TUSK] CANCEL RESPONSE:", JSON.stringify(res.data, null, 2));
+  return res.data;
+}
+
+async function getDeviceListByAreaTuskrobot(baseUrl, areaId, deviceCode) {
+  const body = {
+    areaId: String(areaId),
+    deviceType: 0
+  };
+  if (deviceCode) body.deviceCode = deviceCode;
+  const res = await axios.post(`${baseUrl}/ics/out/device/list/deviceInfo`, body);
+  return res.data;
+}
+
+async function getOnlineStatusTuskrobot(baseUrl)  {
+  const url = `${baseUrl}/rpc/getOnlineStatus`;
+  console.log("[RCS TUSK] GET ONLINE STATUS URL:", url);
+  const res = await axios.get(url, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    timeout: 10000,
+  });
+  console.log("[RCS TUSK] GET ONLINE STATUS RESPONSE:", JSON.stringify(res.data, null, 2));
   return res.data;
 }
 
@@ -148,5 +184,8 @@ module.exports = {
   enableForbiddenZone,
   getDeviceListByArea,
   getDeviceStatusFromAllAreas,
-  sendTaskOrderTuskrobot
+  sendTaskOrderTuskrobot,
+  cancelTaskTuskrobot,
+  getDeviceListByAreaTuskrobot,
+  getOnlineStatusTuskrobot
 };

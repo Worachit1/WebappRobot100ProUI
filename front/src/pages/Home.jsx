@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
-  colors,
   Dialog,
   DialogActions,
   DialogContent,
@@ -56,10 +55,13 @@ function Home() {
           width: "100%",
           py: 1.4,
           fontSize: 20,
-          bgcolor: "#2d49ae",
+          bgcolor: "primary.main",
           fontWeight: 900,
           height: 120,
           marginTop: 2,
+          "&:hover": {
+            bgcolor: "primary.dark",
+          },
         }}
         onClick={() => navigate("/select-robot")}
       >

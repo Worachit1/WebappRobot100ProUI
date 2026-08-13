@@ -98,7 +98,7 @@ function DropSelect() {
           sx={{
             width: "100%",
             textAlign: "center",
-            color: "#2d49ae",
+            color: "primary.main",
             fontSize: 20,
             fontWeight: 900,
             border: "1px solid #000",

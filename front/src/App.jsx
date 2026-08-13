@@ -14,6 +14,7 @@ import Status from "./pages/Status.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
 import PointStatePage from "./pages/PointStatePage.jsx";
 import MapDashboard from "./pages/MapDashboard.jsx";
+import LogoStylePage from "./pages/LogoStylePage.jsx";
 
 function isAuthed() {
   return Boolean(localStorage.getItem("authUser"));
@@ -106,6 +107,15 @@ function App() {
           element={
             <RequireAuth>
               <PointStatePage />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/admin/logo-style"
+          element={
+            <RequireAuth>
+              <LogoStylePage />
             </RequireAuth>
           }
         />

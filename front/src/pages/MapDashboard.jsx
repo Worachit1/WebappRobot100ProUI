@@ -468,8 +468,8 @@ function MapDashboard() {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <MapIcon sx={{ color: "#2d49ae" }} />
-            <Typography sx={{ color: "#2d49ae", fontWeight: 900, fontSize: 18 }}>
+            <MapIcon sx={{ color: "primary.main" }} />
+            <Typography sx={{ color: "primary.main", fontWeight: 900, fontSize: 18 }}>
               AREA MAP MONITOR
             </Typography>
           </Box>

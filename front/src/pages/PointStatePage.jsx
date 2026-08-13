@@ -219,7 +219,7 @@ function PointStatePage() {
                 />
               ) : (
                 <Typography
-                  sx={{ color: "#2d49ae", fontSize: 24, fontWeight: 900 }}
+                  sx={{ color: "primary.main", fontSize: 24, fontWeight: 900 }}
                 >
                   {(robotName || "?").slice(0, 2).toUpperCase()}
                 </Typography>
@@ -228,7 +228,7 @@ function PointStatePage() {
 
             <Box>
               <Typography
-                sx={{ color: "#2d49ae", fontSize: 24, fontWeight: 900 }}
+                sx={{ color: "primary.main", fontSize: 24, fontWeight: 900 }}
               >
                 ROUTE POINTS
               </Typography>

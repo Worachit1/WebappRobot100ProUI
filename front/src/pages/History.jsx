@@ -141,7 +141,7 @@ function History() {
           <Typography
             sx={{
               textAlign: "center",
-              color: "#0066c0",
+              color: "primary.main",
               fontSize: "20px",
               fontWeight: 900,
               border: "2px solid #000",

@@ -157,7 +157,10 @@ function PickupSelect() {
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Confirm",
-      confirmButtonColor: "#2d49ae",
+      confirmButtonColor:
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--app-theme-color")
+          .trim() || "#2d49ae",
       cancelButtonText: "Cancel",
       reverseButtons: true,
     });
@@ -229,7 +232,7 @@ function PickupSelect() {
           sx={{
             width: "100%",
             textAlign: "center",
-            color: "#2d49ae",
+            color: "primary.main",
             fontSize: 20,
             fontWeight: 900,
             border: "1px solid #000",

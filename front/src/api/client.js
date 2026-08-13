@@ -48,6 +48,13 @@ export function updateConfig(config) {
   });
 }
 
+export function uploadLogoAsset(payload) {
+  return apiRequest("/config/logo-upload", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 export function toggleForbiddenZone(matterArea, enabled) {
   return apiRequest("/config/forbidden-zones/toggle", {
     method: "POST",

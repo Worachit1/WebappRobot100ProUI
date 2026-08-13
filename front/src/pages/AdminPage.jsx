@@ -16,8 +16,8 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
-import ListAltIcon from "@mui/icons-material/ListAlt";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import PaletteIcon from "@mui/icons-material/Palette";
 
 import { useNavigate } from "react-router-dom";
 
@@ -26,6 +26,10 @@ import { fetchConfig, toggleForbiddenZone, updateConfig } from "../api/client.js
 
 function getPrimaryBaseUrl(config) {
   return config?.rcs?.[0]?.baseUrl || "";
+}
+
+function getPrimaryAreaIds(config) {
+  return config?.rcs?.[0]?.areaIds || [];
 }
 
 function robotInitials(name) {
@@ -59,6 +63,24 @@ function makeForbiddenZone() {
     id: `fz-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     name: "",
     enabled: false,
+  };
+}
+
+function normalizeAreaId(value) {
+  const trimmed = String(value ?? "").trim();
+  if (!trimmed) return "";
+  return /^\d+$/.test(trimmed) ? Number(trimmed) : trimmed;
+}
+
+function sanitizeConfig(config) {
+  return {
+    ...config,
+    rcs: (config?.rcs || []).map((item) => ({
+      ...item,
+      areaIds: (item.areaIds || [])
+        .map(normalizeAreaId)
+        .filter((areaId) => areaId !== ""),
+    })),
   };
 }
 
@@ -247,13 +269,50 @@ function AdminPage() {
     }));
   };
 
+  const updatePrimaryAreaIds = (areaIds) => {
+    setConfig((current) => ({
+      ...current,
+      rcs:
+        current.rcs?.length > 0
+          ? current.rcs.map((item, index) =>
+              index === 0 ? { ...item, areaIds } : item,
+            )
+          : [
+              {
+                id: "rcs-1",
+                name: "RCS-1",
+                baseUrl: "",
+                areaIds,
+              },
+            ],
+    }));
+  };
+
+  const updatePrimaryAreaId = (index, value) => {
+    const nextAreaIds = [...getPrimaryAreaIds(config)];
+    nextAreaIds[index] = value;
+    updatePrimaryAreaIds(nextAreaIds);
+  };
+
+  const addPrimaryAreaId = () => {
+    updatePrimaryAreaIds([...getPrimaryAreaIds(config), ""]);
+  };
+
+  const removePrimaryAreaId = (index) => {
+    updatePrimaryAreaIds(
+      getPrimaryAreaIds(config).filter((_, itemIndex) => itemIndex !== index),
+    );
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setError("");
     setMessage("");
 
     try {
-      await updateConfig(config);
+      const nextConfig = sanitizeConfig(config);
+      await updateConfig(nextConfig);
+      setConfig(nextConfig);
       setMessage("Saved successfully");
     } catch (err) {
       setError(err.message);
@@ -377,7 +436,7 @@ function AdminPage() {
           >
             <Typography
               sx={{
-                color: "#2d49ae",
+                color: "primary.main",
                 fontSize: 24,
                 fontWeight: 900,
               }}
@@ -385,18 +444,39 @@ function AdminPage() {
               ROBOT SETTINGS
             </Typography>
 
-            <Button
-              variant="contained"
-              startIcon={<SaveIcon />}
-              disabled={saving || !config}
-              onClick={handleSave}
+            <Box
               sx={{
-                borderRadius: "4px",
-                fontWeight: 900,
+                display: "flex",
+                gap: 1,
+                flexDirection: { xs: "column", sm: "row" },
               }}
             >
-              {saving ? "Saving..." : "Save"}
-            </Button>
+              <Button
+                variant="outlined"
+                startIcon={<PaletteIcon />}
+                onClick={() => navigate("/admin/logo-style")}
+                sx={{
+                  borderRadius: "4px",
+                  fontWeight: 900,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Logo Style
+              </Button>
+
+              <Button
+                variant="contained"
+                startIcon={<SaveIcon />}
+                disabled={saving || !config}
+                onClick={handleSave}
+                sx={{
+                  borderRadius: "4px",
+                  fontWeight: 900,
+                }}
+              >
+                {saving ? "Saving..." : "Save"}
+              </Button>
+            </Box>
           </Box>
 
           {message && (
@@ -438,6 +518,83 @@ function AdminPage() {
               value={getPrimaryBaseUrl(config)}
               onChange={(event) => updatePrimaryBaseUrl(event.target.value)}
             />
+
+            <Divider sx={{ my: 2 }} />
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 1.5,
+                mb: 1.5,
+              }}
+            >
+              <Typography
+                sx={{
+                  color: "#1c2755",
+                  fontSize: 15,
+                  fontWeight: 900,
+                }}
+              >
+                AREA ID
+              </Typography>
+              <Tooltip title="Add areaId">
+                <IconButton
+                  color="primary"
+                  onClick={addPrimaryAreaId}
+                  sx={{
+                    bgcolor: "#eef4ff",
+                    border: "1px solid #cddbf8",
+                    "&:hover": { bgcolor: "#dfeaff" },
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+
+            <Stack spacing={1}>
+              {getPrimaryAreaIds(config).length === 0 ? (
+                <Typography sx={{ color: "#667085", fontSize: 14 }}>
+                  No areaId configured
+                </Typography>
+              ) : (
+                getPrimaryAreaIds(config).map((areaId, index) => (
+                  <Box
+                    key={`${index}-${areaId}`}
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: { xs: "1fr 44px", md: "1fr 44px" },
+                      gap: 1,
+                      alignItems: "center",
+                    }}
+                  >
+                    <TextField
+                      size="small"
+                      label={`areaId ${index + 1}`}
+                      value={areaId ?? ""}
+                      onChange={(event) =>
+                        updatePrimaryAreaId(index, event.target.value)
+                      }
+                    />
+                    <Tooltip title="Delete areaId">
+                      <IconButton
+                        color="error"
+                        onClick={() => removePrimaryAreaId(index)}
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          justifySelf: "center",
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                ))
+              )}
+            </Stack>
           </Paper>
 
           <Paper
@@ -466,7 +623,7 @@ function AdminPage() {
                   fontWeight: 900,
                 }}
               >
-                RESTRICTED AREA CONTROL
+                ENABLE FORBIDDEN ZONE
               </Typography>
               <Tooltip title="Add restricted area">
                 <IconButton
@@ -645,7 +802,7 @@ function AdminPage() {
                     ) : (
                       <Typography
                         sx={{
-                          color: "#2d49ae",
+                          color: "primary.main",
                           fontSize: 26,
                           fontWeight: 900,
                         }}
@@ -669,7 +826,8 @@ function AdminPage() {
                   >
                     <Box
                       sx={{
-                        borderLeft: "4px solid #2d49ae",
+                        borderLeft: "4px solid",
+                        borderColor: "primary.main",
                         pl: 1.5,
                         minWidth: 0,
                       }}

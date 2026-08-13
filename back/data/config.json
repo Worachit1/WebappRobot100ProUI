@@ -363,7 +363,7 @@
       "id": "fz-1786351130925-c7nb4rkwwip",
       "name": "NoC",
       "enabled": false,
-      "lastUpdatedAt": "2026-08-11T07:38:51.149Z",
+      "lastUpdatedAt": "2026-08-11T08:14:01.593Z",
       "lastRcsResponse": {
         "code": 1000,
         "data": {},
@@ -374,7 +374,7 @@
       "id": "fz-1786351468688-897rxckgps7",
       "name": "D150T stop",
       "enabled": false,
-      "lastUpdatedAt": "2026-08-11T07:39:18.742Z",
+      "lastUpdatedAt": "2026-08-11T08:10:29.691Z",
       "lastRcsResponse": {
         "code": 1000,
         "data": {},
@@ -393,5 +393,16 @@
       "pickupName": "R1",
       "dropName": "R2"
     }
-  ]
+  ],
+  "themeColor": "#304797",
+  "logoStyle": {
+    "topText": "ROBOT CONTROL",
+    "bottomText": "100 PRO",
+    "logoUrl": "/assets/logo 100Pro.png",
+    "logoWidth": 150,
+    "logoHeight": 100,
+    "objectPositionX": 51,
+    "objectPositionY": 50,
+    "themeColor": "#304797"
+  }
 }

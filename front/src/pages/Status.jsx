@@ -43,7 +43,7 @@ function InfoCard({
   icon,
   title,
   value,
-  color = "#2d49ae",
+  color = "primary.main",
   valueColor = "#111827",
 }) {
   return (
@@ -341,7 +341,7 @@ function Status() {
           sx={{
             width: "100%",
             textAlign: "center",
-            color: "#2d49ae",
+            color: "primary.main",
             fontSize: { xs: 14, md: 16 },
             fontWeight: 900,
             border: "1px solid #000",
@@ -430,7 +430,7 @@ function Status() {
                           sx={{ width: "100%", height: "100%", objectFit: "contain" }}
                         />
                       ) : (
-                        <SmartToyIcon sx={{ fontSize: 90, color: "#2d49ae" }} />
+                        <SmartToyIcon sx={{ fontSize: 90, color: "primary.main" }} />
                       )}
                     </Box>
 
@@ -438,7 +438,7 @@ function Status() {
                       sx={{
                         fontSize: { xs: 16, md: 18 },
                         fontWeight: 900,
-                        color: "#2d49ae",
+                        color: "primary.main",
                       }}
                     >
                       {selectedRobot?.name || status?.robot?.name || "-"}
@@ -513,8 +513,8 @@ function Status() {
                               height: 26,
                               "& svg": { fontSize: 17 },
                               borderRadius: "50%",
-                              bgcolor: "#2d49ae18",
-                              color: "#2d49ae",
+                              bgcolor: (theme) => `${theme.palette.primary.main}18`,
+                              color: "primary.main",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -576,10 +576,10 @@ function Status() {
                   }}
                 >
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                    <AssignmentIcon sx={{ color: "#2d49ae" }} />
+                    <AssignmentIcon sx={{ color: "primary.main" }} />
                     <Typography
                       sx={{
-                        color: "#2d49ae",
+                        color: "primary.main",
                         fontWeight: 900,
                         fontSize: { xs: 14, md: 16 },
                       }}

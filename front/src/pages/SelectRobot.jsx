@@ -49,7 +49,7 @@ function RobotCard({ robot, selected, onSelect, onOpen }) {
           height: { xs: 100, md: 160 },
           borderRadius: "50%",
           border: "3px solid",
-          borderColor: selected ? "#2d49ae" : "transparent",
+          borderColor: selected ? "primary.main" : "transparent",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -79,7 +79,7 @@ function RobotCard({ robot, selected, onSelect, onOpen }) {
           py: { xs: 0.3, md: 0.5 },
           borderRadius: 999,
           border: "1px solid #111",
-          bgcolor: selected ? "#2d49ae" : "#fff",
+          bgcolor: selected ? "primary.main" : "#fff",
           color: selected ? "#fff" : "#111",
         }}
       >
@@ -143,7 +143,7 @@ function SelectRobot() {
           sx={{
             width: "100%",
             textAlign: "center",
-            color: "#2d49ae",
+            color: "primary.main",
             fontSize: 20,
             fontWeight: 900,
             border: "1px solid #000",

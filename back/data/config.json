@@ -10,8 +10,7 @@
       "baseUrl": "http://192.168.8.100:7000",
       "areaIds": [
         24,
-        3,
-        25
+        3
       ]
     }
   ],
@@ -23,8 +22,7 @@
       "rcsId": "rcs-1",
       "imageUrl": "/assets/robot/C0401.png",
       "modelProcessCode": {
-        "delivery": "CmoveShelf",
-        "process2": "C000000"
+        "delivery": "CmoveShelf"
       }
     },
     {
@@ -394,15 +392,19 @@
       "dropName": "R2"
     }
   ],
-  "themeColor": "#304797",
+  "themeColor": "#324998",
   "logoStyle": {
     "topText": "ROBOT CONTROL",
     "bottomText": "100 PRO",
-    "logoUrl": "/assets/logo 100Pro.png",
+    "logoUrl": "/assets/logo/logo-100pro-1786608780239.png",
     "logoWidth": 150,
     "logoHeight": 100,
-    "objectPositionX": 51,
+    "objectPositionX": 50,
     "objectPositionY": 50,
-    "themeColor": "#304797"
+    "themeColor": "#324998"
+  },
+  "appMeta": {
+    "title": "Robot Control Demo",
+    "faviconUrl": "/vite.svg"
   }
 }

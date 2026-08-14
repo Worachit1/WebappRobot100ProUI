@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Box, IconButton, useMediaQuery } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HomeIcon from "@mui/icons-material/Home";
-import logo100Pro from "../../public/assets/logo 100Pro.png";
+import logo100Pro from "../../public/assets/logo/logo 100Pro.png";
 import { fetchConfig } from "../api/client.js";
+import { normalizeAssetUrl } from "../utils/assetUrl.js";
 
 const DEFAULT_LOGO_STYLE = {
   logoUrl: logo100Pro,
   objectPositionX: 50,
   objectPositionY: 50,
 };
+
+function toCssImageUrl(url) {
+  return `url("${String(url || "").replace(/"/g, '\\"')}")`;
+}
 
 function ScreenLayout({
   title,
@@ -44,7 +49,7 @@ function ScreenLayout({
     };
   }, []);
 
-  const logoUrl = logoStyle.logoUrl || logo100Pro;
+  const logoUrl = normalizeAssetUrl(logoStyle.logoUrl, logo100Pro);
 
   return (
     <Box
@@ -65,7 +70,7 @@ function ScreenLayout({
             content: '""',
             position: "fixed",
             inset: 0,
-            backgroundImage: `url(${logoUrl})`,
+            backgroundImage: toCssImageUrl(logoUrl),
             backgroundRepeat: "no-repeat",
             backgroundPosition: `${Number(logoStyle.objectPositionX) || 50}% ${
               Number(logoStyle.objectPositionY) || 50

@@ -48,7 +48,7 @@ router.post("/logo-upload", async (req, res) => {
         .replace(/^-+|-+$/g, "")
         .slice(0, 40) || "logo";
 
-    const assetDir = path.join(__dirname, "../../../front/public/assets");
+    const assetDir = path.join(__dirname, "../../../front/public/assets/logo");
     await fs.mkdir(assetDir, { recursive: true });
 
     const nextFileName = `${safeBaseName}-${Date.now()}${extFromType}`;
@@ -57,7 +57,7 @@ router.post("/logo-upload", async (req, res) => {
 
     res.json({
       ok: true,
-      path: `/assets/${nextFileName}`,
+      path: `/assets/logo/${nextFileName}`,
     });
   } catch (err) {
     res.status(500).json({ error: err.message || "Upload logo failed" });

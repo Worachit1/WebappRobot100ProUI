@@ -21,7 +21,7 @@ palletSensorMonitor.startPalletSensorMonitor();
 
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
-app.use("/assets", express.static(path.join(__dirname, "../../front/public/assets")));
+app.use("/assets", express.static(path.join(__dirname, "../../front/public/assets/logo")));
 
 app.get("/api/health", (req, res) => {
   res.json({ ok: true });

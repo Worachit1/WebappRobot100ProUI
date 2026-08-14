@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 
-import logo100Pro from "../../public/assets/logo 100Pro.png";
+import logo100Pro from "../../public/assets/logo/logo 100Pro.png";
 import { fetchConfig } from "../api/client.js";
+import { normalizeAssetUrl } from "../utils/assetUrl.js";
 
 const DEFAULT_LOGO_STYLE = {
   topText: "ROBOT CONTROL",
   bottomText: "100 PRO",
-  logoUrl: logo100Pro,
+  logoUrl: "/assets/logo/logo 100Pro.png",
   logoWidth: 150,
   logoHeight: 100,
   objectPositionX: 50,
@@ -46,7 +47,7 @@ function Logo() {
     <Box sx={{ textAlign: "center", my: 1 }}>
       <Box
         component="img"
-        src={logoStyle.logoUrl || logo100Pro}
+        src={normalizeAssetUrl(logoStyle.logoUrl, logo100Pro)}
         alt="Logo"
         sx={{
           width: `${Number(logoStyle.logoWidth) || 150}px`,

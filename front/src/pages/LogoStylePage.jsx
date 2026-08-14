@@ -17,17 +17,23 @@ import { useNavigate } from "react-router-dom";
 
 import ScreenLayout from "../components/ScreenLayout.jsx";
 import { fetchConfig, updateConfig, uploadLogoAsset } from "../api/client.js";
-import fallbackLogo from "../../public/assets/logo 100Pro.png";
+import { normalizeAssetUrl } from "../utils/assetUrl.js";
+import fallbackLogo from "../../public/assets/logo/logo 100Pro.png";
 
 const DEFAULT_LOGO_STYLE = {
   topText: "ROBOT CONTROL",
   bottomText: "100 PRO",
-  logoUrl: "/assets/logo 100Pro.png",
+  logoUrl: "/assets/logo/logo 100Pro.png",
   logoWidth: 150,
   logoHeight: 100,
   objectPositionX: 50,
   objectPositionY: 50,
   themeColor: "#2d49ae",
+};
+
+const DEFAULT_APP_META = {
+  title: "Robot Control Demo",
+  faviconUrl: "/vite.svg",
 };
 
 const THEME_COLORS = [
@@ -61,15 +67,25 @@ function mergeLogoStyle(config) {
   };
 }
 
+function mergeAppMeta(config) {
+  return {
+    ...DEFAULT_APP_META,
+    ...(config?.appMeta || {}),
+  };
+}
+
 function LogoStylePage() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const faviconInputRef = useRef(null);
 
   const [config, setConfig] = useState(null);
   const [logoStyle, setLogoStyle] = useState(DEFAULT_LOGO_STYLE);
+  const [appMeta, setAppMeta] = useState(DEFAULT_APP_META);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingFavicon, setUploadingFavicon] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -81,17 +97,22 @@ function LogoStylePage() {
       .then((data) => {
         setConfig(data);
         setLogoStyle(mergeLogoStyle(data));
+        setAppMeta(mergeAppMeta(data));
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
 
   const previewLogoUrl = useMemo(() => {
-    return logoStyle.logoUrl || fallbackLogo;
+    return normalizeAssetUrl(logoStyle.logoUrl, fallbackLogo);
   }, [logoStyle.logoUrl]);
 
   const updateLogoStyleField = (field, value) => {
     setLogoStyle((current) => ({ ...current, [field]: value }));
+  };
+
+  const updateAppMetaField = (field, value) => {
+    setAppMeta((current) => ({ ...current, [field]: value }));
   };
 
   const handleUploadLogo = async (event) => {
@@ -124,8 +145,37 @@ function LogoStylePage() {
     }
   };
 
+  const handleUploadFavicon = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadingFavicon(true);
+    setError("");
+    setMessage("");
+
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      const result = await uploadLogoAsset({
+        fileName: file.name,
+        mimeType: file.type,
+        dataUrl,
+      });
+      setAppMeta((current) => ({
+        ...current,
+        faviconUrl: result.path,
+      }));
+      setMessage("Favicon uploaded. Press Save to apply it.");
+    } catch (err) {
+      setError(err.message || "Upload favicon failed");
+    } finally {
+      setUploadingFavicon(false);
+      event.target.value = "";
+    }
+  };
+
   const resetLogoStyle = () => {
     setLogoStyle(DEFAULT_LOGO_STYLE);
+    setAppMeta(DEFAULT_APP_META);
   };
 
   const handleSave = async () => {
@@ -146,13 +196,21 @@ function LogoStylePage() {
         ...(config || {}),
         themeColor: nextStyle.themeColor,
         logoStyle: nextStyle,
+        appMeta: {
+          title: String(appMeta.title || DEFAULT_APP_META.title).trim(),
+          faviconUrl: appMeta.faviconUrl || DEFAULT_APP_META.faviconUrl,
+        },
       };
       await updateConfig(nextConfig);
       setConfig(nextConfig);
       setLogoStyle(nextStyle);
+      setAppMeta(nextConfig.appMeta);
       window.dispatchEvent(
         new CustomEvent("app-theme-color-change", {
-          detail: { themeColor: nextStyle.themeColor },
+          detail: {
+            themeColor: nextStyle.themeColor,
+            appMeta: nextConfig.appMeta,
+          },
         }),
       );
       setMessage("Saved successfully");
@@ -188,7 +246,7 @@ function LogoStylePage() {
           <Button
             variant="contained"
             startIcon={<SaveIcon />}
-            disabled={saving || loading || uploading}
+            disabled={saving || loading || uploading || uploadingFavicon}
             onClick={handleSave}
             sx={{ borderRadius: "4px", fontWeight: 900 }}
           >
@@ -277,6 +335,63 @@ function LogoStylePage() {
                   {logoStyle.bottomText || "100 PRO"}
                 </Typography>
               </Box>
+
+              <Box
+                sx={{
+                  mt: 2,
+                  border: "1px solid #e4e9f5",
+                  borderRadius: "4px",
+                  bgcolor: "#fbfcff",
+                  p: 1.5,
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: "#1c2755",
+                    fontSize: 13,
+                    fontWeight: 900,
+                    mb: 1,
+                  }}
+                >
+                  BROWSER PREVIEW
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    minWidth: 0,
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={normalizeAssetUrl(
+                      appMeta.faviconUrl,
+                      DEFAULT_APP_META.faviconUrl,
+                    )}
+                    alt="Favicon preview"
+                    sx={{
+                      width: 28,
+                      height: 28,
+                      objectFit: "contain",
+                      border: "1px solid #d8deef",
+                      borderRadius: "4px",
+                      bgcolor: "#fff",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      color: "#101828",
+                      fontWeight: 900,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {appMeta.title || DEFAULT_APP_META.title}
+                  </Typography>
+                </Box>
+              </Box>
             </Paper>
 
             <Paper
@@ -308,6 +423,44 @@ function LogoStylePage() {
                     updateLogoStyleField("bottomText", event.target.value)
                   }
                 />
+
+                <Typography
+                  sx={{ color: "#1c2755", fontSize: 15, fontWeight: 900 }}
+                >
+                  BROWSER TITLE
+                </Typography>
+                <TextField
+                  label="index.html title"
+                  value={appMeta.title || ""}
+                  onChange={(event) =>
+                    updateAppMetaField("title", event.target.value)
+                  }
+                />
+                <Typography
+                  sx={{ color: "#1c2755", fontSize: 15, fontWeight: 900 }}
+                >
+                  FAVICON
+                </Typography>
+                <Typography sx={{ color: "#667085", fontSize: 13 }}>
+                  Recommended size: SVG or PNG, square 32 x 32 px, 64 x 64 px,
+                  or 512 x 512 px.
+                </Typography>
+                <input
+                  ref={faviconInputRef}
+                  type="file"
+                  accept="image/*,.svg"
+                  hidden
+                  onChange={handleUploadFavicon}
+                />
+                <Button
+                  variant="outlined"
+                  startIcon={<CloudUploadIcon />}
+                  disabled={uploadingFavicon || saving}
+                  onClick={() => faviconInputRef.current?.click()}
+                  sx={{ borderRadius: "4px", fontWeight: 900 }}
+                >
+                  {uploadingFavicon ? "Uploading..." : "Upload Favicon"}
+                </Button>
 
                 <Typography
                   sx={{ color: "#1c2755", fontSize: 15, fontWeight: 900 }}

@@ -457,25 +457,30 @@ async function cancelRunningOrder(orderId, releaseOnly = false) {
   }
 
   const robot = findRobot(config, task.robotId);
+
   if (!robot) {
     const err = new Error("Robot not found");
     err.statusCode = 404;
     throw err;
   }
 
-  const rcsBaseUrl = task.rcsBaseUrl || findRcsBaseUrl(config, robot);
+  const rcsBaseUrl =
+    task.rcsBaseUrl || findRcsBaseUrl(config, robot);
+
   let rcsResponse = null;
 
   if (!releaseOnly && !task.useTuskrobotApi) {
     rcsResponse = await cancelTask(rcsBaseUrl, [
       {
         orderId,
-        destPosition: task.drop?.rcsPosition || task.drop?.name || "",
       },
     ]);
 
     if (Number(rcsResponse?.code) !== 1000) {
-      const err = new Error(rcsResponse?.desc || "RCS cancelTask failed");
+      const err = new Error(
+        rcsResponse?.desc || "RCS cancelTask failed",
+      );
+
       err.statusCode = 502;
       err.payload = { rcsResponse };
       throw err;

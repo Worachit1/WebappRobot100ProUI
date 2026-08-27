@@ -23,6 +23,7 @@ import ScreenLayout from "../components/ScreenLayout.jsx";
 import {
   cancelOrder,
   cancelRunningOrder,
+  continueOrder,
   fetchConfig,
   fetchRobotStatus,
 } from "../api/client.js";
@@ -322,6 +323,50 @@ function Status() {
         icon: "error",
         title: "Release failed",
         text: err?.message || "Release task failed",
+      });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleContinue = async (task) => {
+    const result = await Swal.fire({
+      title: "Continue Task?",
+      html: `
+        <div style="text-align:left">
+          <p><b>Order ID:</b> ${task.orderId}</p>
+          <p><b>Route:</b> ${task.pickup?.name || "-"} → ${task.drop?.name || "-"}</p>
+          <p>This will confirm the paused RCS step and let the robot continue.</p>
+        </div>
+      `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Continue",
+      cancelButtonText: "Back",
+      confirmButtonColor:
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--app-theme-color")
+          .trim() || "#2d49ae",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      setActionLoading(true);
+      await continueOrder(task.orderId);
+      await reloadStatus();
+      await Swal.fire({
+        icon: "success",
+        title: "Continued",
+        timer: 1000,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Continue failed",
+        text: err?.message || "Continue task failed",
       });
     } finally {
       setActionLoading(false);
@@ -632,7 +677,21 @@ function Status() {
                               ? formatRemaining(task.remainingDelayMs)
                               : formatDelay(task.delaySeconds)}
                           </Typography>
-                          <Box sx={{ display: "flex", gap: 0.75 }}>
+                          <Box sx={{ display: "flex", gap: 0.75, flexWrap: "wrap" }}>
+                            {task.canContinue && (
+                              <Button
+                                variant="contained"
+                                disabled={actionLoading}
+                                onClick={() => handleContinue(task)}
+                                sx={{
+                                  borderRadius: "4px",
+                                  fontWeight: 900,
+                                  minWidth: 104,
+                                }}
+                              >
+                                Continue
+                              </Button>
+                            )}
                             <Button
                               variant="outlined"
                               color="error"

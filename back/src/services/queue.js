@@ -1,6 +1,7 @@
 const { getConfig, getHistory, saveHistory } = require("./store");
 const {
   cancelTask,
+  continueTask,
   getTaskOrderStatus,
   sendTaskOrder,
   sendTaskOrderTuskrobot,
@@ -504,6 +505,65 @@ async function cancelRunningOrder(orderId, releaseOnly = false) {
   };
 }
 
+async function continueRunningOrder(orderId) {
+  const config = await getConfig();
+  const history = await getHistory();
+  const task = history.find((item) => item.orderId === orderId);
+
+  if (!task) {
+    const err = new Error("Order not found");
+    err.statusCode = 404;
+    throw err;
+  }
+
+  if (!RUNNING_STATUSES.has(task.status)) {
+    const err = new Error("This task is not waiting or running in RCS");
+    err.statusCode = 409;
+    err.payload = { status: task.status };
+    throw err;
+  }
+
+  if (task.useTuskrobotApi) {
+    const err = new Error("Continue task is not supported for Tuskrobot API");
+    err.statusCode = 409;
+    throw err;
+  }
+
+  const robot = findRobot(config, task.robotId);
+
+  if (!robot) {
+    const err = new Error("Robot not found");
+    err.statusCode = 404;
+    throw err;
+  }
+
+  const rcsBaseUrl = task.rcsBaseUrl || findRcsBaseUrl(config, robot);
+  const rcsResponse = await continueTask(rcsBaseUrl, { orderId });
+
+  if (Number(rcsResponse?.code) !== 1000) {
+    const err = new Error(rcsResponse?.desc || "RCS continueTask failed");
+    err.statusCode = 502;
+    err.payload = { rcsResponse };
+    throw err;
+  }
+
+  await updateHistory(orderId, {
+    status: "RUNNING",
+    continuedAt: new Date().toISOString(),
+    continueRcsResponse: rcsResponse,
+    lastPollError: null,
+  });
+
+  processRobotQueue(task.robotId).catch(console.error);
+
+  return {
+    ok: true,
+    orderId,
+    status: "RUNNING",
+    rcsResponse,
+  };
+}
+
 async function getQueueSnapshot(robotId) {
   const queue = getQueueState(robotId);
   const history = await getHistory();
@@ -519,6 +579,7 @@ async function getQueueSnapshot(robotId) {
 
 module.exports = {
   cancelQueuedOrder,
+  continueRunningOrder,
   cancelRunningOrder,
   dispatchOrderImmediate,
   enqueueOrder,

@@ -30,6 +30,20 @@ async function cancelTask(baseUrl, tasks) {
   return res.data;
 }
 
+async function continueTask(baseUrl, payload) {
+  const url = `${baseUrl}/ics/out/task/continueTask`;
+  console.log("[RCS] CONTINUE URL:", url);
+  console.log("[RCS] CONTINUE BODY:", JSON.stringify(payload, null, 2));
+  const res = await axios.post(url, payload, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    timeout: 10000,
+  });
+  console.log("[RCS] CONTINUE RESPONSE:", JSON.stringify(res.data, null, 2));
+  return res.data;
+}
+
 async function getStockStatus(baseUrl, payload) {
   const res = await axios.post(`${baseUrl}/ics/out/getStockStatus`, payload, {
     headers: {
@@ -179,6 +193,7 @@ module.exports = {
   sendTaskOrder,
   getTaskOrderStatus,
   cancelTask,
+  continueTask,
   getStockStatus,
   getTopologyList,
   enableForbiddenZone,

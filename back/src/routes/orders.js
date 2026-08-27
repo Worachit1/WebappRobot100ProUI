@@ -3,6 +3,7 @@ const express = require("express");
 const { getConfig, getHistory } = require("../services/store");
 const {
   cancelQueuedOrder,
+  continueRunningOrder,
   cancelRunningOrder,
   dispatchOrderImmediate,
   getQueueSnapshot,
@@ -433,6 +434,18 @@ router.post("/:orderId/cancel-running", async (req, res) => {
   } catch (err) {
     res.status(err.statusCode || 500).json({
       error: err.message || "Cancel running failed",
+      ...(err.payload || {}),
+    });
+  }
+});
+
+router.post("/:orderId/continue", async (req, res) => {
+  try {
+    const result = await continueRunningOrder(req.params.orderId);
+    res.json(result);
+  } catch (err) {
+    res.status(err.statusCode || 500).json({
+      error: err.message || "Continue task failed",
       ...(err.payload || {}),
     });
   }

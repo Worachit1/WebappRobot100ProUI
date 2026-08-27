@@ -129,6 +129,10 @@ export function cancelRunningOrder(orderId, releaseOnly = false) {
   });
 }
 
+export function continueOrder(orderId) {
+  return apiRequest(`/orders/${orderId}/continue`, { method: "POST" });
+}
+
 export function fetchRobotStatus(robotId) {
   return apiRequest(`/status/${robotId}`);
 }

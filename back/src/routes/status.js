@@ -114,6 +114,7 @@ router.get("/:robotId", async (req, res) => {
           item.status === "SENDING" ||
           item.status === "ISSUED" ||
           item.status === "WAIT_CONFIRMATION",
+        canContinue: item.status === "WAIT_CONFIRMATION",
         createdAt: item.createdAt,
         startedAt: item.startedAt,
         sentAt: item.sentAt,
